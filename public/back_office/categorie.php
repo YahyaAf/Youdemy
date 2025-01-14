@@ -1,19 +1,17 @@
-<!--
+<?php
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    use config\Database;
+    use Src\categories\Category;
+    session_start();
 
-=========================================================
-* Now UI Dashboard - v1.5.0
-=========================================================
+    $database = new Database("youdemy");
+    $db = $database->getConnection();
 
-* Product Page: https://www.creative-tim.com/product/now-ui-dashboard
-* Copyright 2019 Creative Tim (http://www.creative-tim.com)
+    $category = new Category($db);
+    
 
-* Designed by www.invisionapp.com Coded by www.creative-tim.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
--->
+    $categories = $category->read();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -171,18 +169,60 @@
       <div class="panel-header panel-header-sm">
       </div>
       <div class="content">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card ">
-              <div class="card-header ">
-                Google Maps
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h5 class="title">Ajouter nouvelle Categories</h5>
+                          <p class="category">
+                              Handcrafted by our friends from 
+                              <a href="">safi</a>
+                          </p>
+                      </div>
+                      <div class="card-body">
+                          <form action="../../src/categories/categorieHandler.php" method="POST" class="mt-3">
+                              <div class="mb-3">
+                                  <label for="name" class="form-label">Categorie Name</label>
+                                  <input type="text" class="form-control" id="name" name="name" placeholder="entrer votre categorie name" required>
+                              </div>
+                              <button type="submit" class="btn btn-primary">Create Categorie</button>
+                          </form>      
+                      </div>
+                  </div>
+                  <div class="card-header">
+                    <h5 class="title">List de Categories :</h5>
+                          <p class="category">
+                              Handcrafted by our friends from 
+                              <a href="">safi</a>
+                          </p>
+                  </div>
+                  <table class="table table-bordered">
+                      <thead class="bg-light">
+                          <tr>
+                              <th>Name</th>
+                              <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <?php
+                          if ($categories) {
+                              foreach ($categories as $categorie) {
+                                  echo "<tr>
+                                          <td style='width: 50%;'>{$categorie['name']}</td>
+                                          <td style='width: 50%;'>
+                                              <a href='../../src/categories/categorieUpdate.php?id={$categorie['id']}' class='btn btn-warning btn-sm'>Update</a>
+                                              <a href='../../src/categories/categorieHandler.php?id={$categorie['id']}' class='btn btn-danger btn-sm'>Delete</a>
+                                          </td>
+                                      </tr>";
+                              }
+                          } else {
+                              echo "<tr><td colspan='2' class='text-center'>No categories found.</td></tr>";
+                          }
+                          ?>
+                      </tbody>
+                  </table>
               </div>
-              <div class="card-body ">
-                <div id="map" class="map"></div>
-              </div>
-            </div>
           </div>
-        </div>
       </div>
       <footer class="footer">
         <div class=" container-fluid ">
