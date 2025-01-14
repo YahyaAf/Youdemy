@@ -11,18 +11,20 @@ $course = new Cours($db);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (
-        isset($_POST['title'], $_POST['contenu'], $_POST['categorie'], $_POST['description']) &&
+        isset($_POST['title'], $_POST['contenu'], $_POST['categorie'], $_POST['description'], $_POST['scheduled_date']) &&
         !empty($_POST['title']) &&
         !empty($_POST['contenu']) &&
         !empty($_POST['categorie']) &&
-        !empty($_POST['description'])
+        !empty($_POST['description']) &&
+        !empty($_POST['scheduled_date'])
     ) {
         $title = htmlspecialchars(strip_tags($_POST['title']));
         $contenu = htmlspecialchars(strip_tags($_POST['contenu'])); 
         $description = htmlspecialchars(strip_tags($_POST['description']));
         
         $featured_image = isset($_POST['featured_image']) ? htmlspecialchars(strip_tags($_POST['featured_image'])) : null;
-   
+        $scheduled_date = htmlspecialchars(strip_tags($_POST['scheduled_date'])); 
+        
         $category_id = intval(htmlspecialchars(strip_tags($_POST['categorie'])));
         $enseignant_id = isset($_POST['enseignant_id']) ? intval($_POST['enseignant_id']) : null;
 
@@ -34,7 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             'description' => $description,
             'featured_image' => $featured_image,
             'category_id' => $category_id,
-            'enseignant_id' => $enseignant_id,  
+            'enseignant_id' => $enseignant_id,
+            'scheduled_date' => $scheduled_date, 
             'tags' => $tags 
         ];
 
@@ -53,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 } else {
     echo "Invalid request method. Please use POST.";
 }
+
 
 
 

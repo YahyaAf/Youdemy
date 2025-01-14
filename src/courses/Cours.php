@@ -17,8 +17,8 @@ class Cours {
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO cours 
-                (title, description, contenu, featured_image, category_id, enseignant_id, created_at, updated_at)
-                VALUES (:title, :description, :contenu, :featured_image, :category_id, :enseignant_id, NOW(), NOW())
+                (title, description, contenu, featured_image, category_id, enseignant_id, scheduled_date, created_at, updated_at)
+                VALUES (:title, :description, :contenu, :featured_image, :category_id, :enseignant_id, :scheduled_date, NOW(), NOW())
             ");
             $stmt->execute([
                 'title' => $data['title'],
@@ -26,7 +26,8 @@ class Cours {
                 'contenu' => $data['contenu'], 
                 'featured_image' => $data['featured_image'],
                 'category_id' => $data['category_id'],
-                'enseignant_id' => $data['enseignant_id']
+                'enseignant_id' => $data['enseignant_id'],
+                'scheduled_date' => $data['scheduled_date']
             ]);
     
             $courseId = $this->pdo->lastInsertId();
@@ -43,25 +44,29 @@ class Cours {
     }
     
     
-
-    // public function readAll() {
-    //     try {
-    //         $stmt = $this->pdo->query("
-    //             SELECT c.*, ca.name AS category_name, u.username AS enseignant_name, GROUP_CONCAT(t.name) AS tags
-    //             FROM cours c
-    //             LEFT JOIN categories ca ON c.category_id = ca.id
-    //             LEFT JOIN users u ON c.enseignant_id = u.id
-    //             LEFT JOIN cours_tags ct ON c.id = ct.cours_id
-    //             LEFT JOIN tags t ON ct.tag_id = t.id
-    //             GROUP BY c.id
-    //             ORDER BY c.created_at DESC
-    //         ");
-    //         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //     } catch (PDOException $e) {
-    //         error_log("Error fetching courses: " . $e->getMessage());
-    //         return [];
-    //     }
-    // }
+    public function readAll() {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                GROUP BY c.id
+                ORDER BY c.created_at DESC
+            ");
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching courses: " . $e->getMessage());
+            return [];
+        }
+    }
+    
 
     // public function read($id) {
     //     try {
