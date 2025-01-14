@@ -50,7 +50,8 @@ class Cours {
                 SELECT c.*, 
                     ca.name AS category_name, 
                     u.username AS enseignant_name, 
-                    GROUP_CONCAT(t.name) AS tags
+                    GROUP_CONCAT(t.name) AS tags,
+                    DATE(c.scheduled_date) AS scheduled_date_only
                 FROM cours c
                 LEFT JOIN categories ca ON c.category_id = ca.id
                 LEFT JOIN users u ON c.enseignant_id = u.id
@@ -66,6 +67,7 @@ class Cours {
             return [];
         }
     }
+    
     
 
     // public function read($id) {
@@ -129,19 +131,19 @@ class Cours {
     //     }
     // }
 
-    // public function delete($id) {
-    //     try {
-    //         $this->removeTags($id);
+    public function delete($id) {
+        try {
+            $this->removeTags($id);
 
-    //         $stmt = $this->pdo->prepare("DELETE FROM cours WHERE id = :id");
-    //         $stmt->execute(['id' => $id]);
+            $stmt = $this->pdo->prepare("DELETE FROM cours WHERE id = :id");
+            $stmt->execute(['id' => $id]);
 
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         error_log("Error deleting course: " . $e->getMessage());
-    //         return false;
-    //     }
-    // }
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error deleting course: " . $e->getMessage());
+            return false;
+        }
+    }
 
     private function addTags($courseId, $tags) {
         try {

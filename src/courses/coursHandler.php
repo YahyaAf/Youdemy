@@ -57,20 +57,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo "Invalid request method. Please use POST.";
 }
 
-
-
-
 // Delete a course 
-// if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['id'])) {
-//     $courseId = $_GET['id'];
+if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['id'])) {
+    $courseId = $_GET['id'];
 
-//     if ($course->delete($courseId)) {
-//         header("Location: ../../public/pages/course.php"); 
-//     } else {
-//         echo "Failed to delete the course.";
-//     }
-// } 
+    if ($course->delete($courseId)) {
+        header("Location: ../../public/front_office/add_cours.php");
+    } else {
+        echo "Failed to delete the course.";
+    }
+} 
 
-// else {
-//     echo "Invalid request method.";
-// }
+else {
+    echo "Invalid request method.";
+}
