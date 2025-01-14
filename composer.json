@@ -1,0 +1,11 @@
+{
+    "name": "yahyaafadisse/youdemy",
+    "description": "A platform for creating and managing online courses",
+    "autoload": {
+        "psr-4": {
+            "config\\": "config/",
+            "Src\\": "src/"
+        }
+    },
+    "require": {}
+}
