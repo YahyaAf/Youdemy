@@ -13,21 +13,22 @@ class Cours {
         $this->pdo = $pdo;
     }
 
-    public function create($data) {
+    public function create_by_document($data) {
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO cours 
-                (title, description, contenu, featured_image, category_id, enseignant_id, scheduled_date, created_at, updated_at)
-                VALUES (:title, :description, :contenu, :featured_image, :category_id, :enseignant_id, :scheduled_date, NOW(), NOW())
+                (title, description, contenu, featured_image, category_id, enseignant_id, scheduled_date, created_at, updated_at, contenu_document, contenu_video)
+                VALUES (:title, :description, :contenu, :featured_image, :category_id, :enseignant_id, :scheduled_date, NOW(), NOW(), :contenu_document, NULL)
             ");
             $stmt->execute([
                 'title' => $data['title'],
                 'description' => $data['description'],
-                'contenu' => $data['contenu'], 
+                'contenu' => 'document',
                 'featured_image' => $data['featured_image'],
                 'category_id' => $data['category_id'],
                 'enseignant_id' => $data['enseignant_id'],
-                'scheduled_date' => $data['scheduled_date']
+                'scheduled_date' => $data['scheduled_date'],
+                'contenu_document' => $data['contenu_document'],
             ]);
     
             $courseId = $this->pdo->lastInsertId();
@@ -38,10 +39,57 @@ class Cours {
     
             return $courseId;
         } catch (PDOException $e) {
-            echo "Error creating course: " . $e->getMessage();
+            echo "Error creating course (document): " . $e->getMessage();
             return false;
         }
     }
+    
+    public function create_by_video($data, $type = "video") {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO cours 
+                (title, description, contenu, featured_image, category_id, enseignant_id, scheduled_date, created_at, updated_at, contenu_document, contenu_video)
+                VALUES (:title, :description, :contenu, :featured_image, :category_id, :enseignant_id, :scheduled_date, NOW(), NOW(), NULL, :contenu_video)
+            ");
+            $stmt->execute([
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'contenu' => $type,
+                'featured_image' => $data['featured_image'],
+                'category_id' => $data['category_id'],
+                'enseignant_id' => $data['enseignant_id'],
+                'scheduled_date' => $data['scheduled_date'],
+                'contenu_video' => $data['contenu_video'],
+            ]);
+    
+            $courseId = $this->pdo->lastInsertId();
+    
+            if (!empty($data['tags'])) {
+                $this->addTags($courseId, $data['tags']);
+            }
+    
+            return $courseId;
+        } catch (PDOException $e) {
+            echo "Error creating course (video): " . $e->getMessage();
+            return false;
+        }
+    }
+    
+    public function __call($name, $args) {
+        if ($name === "create") {
+            if (count($args) === 1) {
+                return $this->create_by_document($args[0]);
+            } elseif (count($args) === 2) {
+                return $this->create_by_video($args[0], $args[1]);
+            } else {
+                throw new Exception("Invalid number of arguments for create method.");
+            }
+        }
+    
+        throw new BadMethodCallException("Method $name does not exist.");
+    }
+    
+    
     
     
     public function readAll() {
@@ -96,40 +144,40 @@ class Cours {
     //     }
     // }
 
-    // public function update($id, $data) {
-    //     try {
-    //         if (empty($data['title']) || empty($data['content']) || empty($data['category_id'])) {
-    //             throw new Exception("Missing required fields.");
-    //         }
+    public function update($id, $data) {
+        try {
+            if (empty($data['title']) || empty($data['content']) || empty($data['category_id'])) {
+                throw new Exception("Missing required fields.");
+            }
 
-    //         $stmt = $this->pdo->prepare("
-    //             UPDATE cours
-    //             SET title = :title, description = :description, content = :content, content_type = :content_type, featured_image = :featured_image, 
-    //                 status = :status, category_id = :category_id, updated_at = NOW()
-    //             WHERE id = :id
-    //         ");
-    //         $stmt->execute([
-    //             'id' => $id,
-    //             'title' => $data['title'],
-    //             'description' => $data['description'], 
-    //             'content' => $data['content'],
-    //             'content_type' => $data['content_type'],
-    //             'featured_image' => $data['featured_image'],
-    //             'status' => $data['status'],
-    //             'category_id' => $data['category_id']
-    //         ]);
+            $stmt = $this->pdo->prepare("
+                UPDATE cours
+                SET title = :title, description = :description, contenu = :contenu, featured_image = :featured_image, 
+                    category_id = :category_id, updated_at = NOW()
+                WHERE id = :id
+            ");
 
-    //         $this->updateTags($id, $data['tags']);
-
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         error_log("Error updating course: " . $e->getMessage());
-    //         return false;
-    //     } catch (Exception $e) {
-    //         error_log($e->getMessage());
-    //         return false;
-    //     }
-    // }
+            $stmt->execute([
+                'id' => $id,
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'contenu' => $data['contenu'],
+                'featured_image' => $data['featured_image'],
+                'category_id' => $data['category_id']
+            ]);
+    
+            $this->updateTags($id, $data['tags']);
+    
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error updating course: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+    
 
     public function delete($id) {
         try {

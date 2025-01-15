@@ -92,13 +92,33 @@
                         <select 
                             id="contenu" 
                             name="contenu" 
-                            class="w-full mt-1 p-2.5 bg-gray-700 text-gray-200 border border-gray-600 rounded-md focus:ring focus:ring-blue-500 focus:border-blue-500 focus:outline-none" <!-- Reduced padding -->
+                            class="w-full mt-1 p-2.5 bg-gray-700 text-gray-200 border border-gray-600 rounded-md focus:ring focus:ring-blue-500 focus:border-blue-500 focus:outline-none" 
                             required
                         >
                             <option value="">--Please choose content type--</option>
                             <option value="video">Video</option>
                             <option value="document">Document</option>
                         </select>
+                    </div>
+                    <div id="video" class="mb-4">
+                        <label for="contenu_video" class="block text-lg font-medium mb-2">Video url</label>
+                        <input 
+                            type="url" 
+                            id="contenu_video" 
+                            name="contenu_video" 
+                            class="w-full p-2.5 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter image URL" 
+                            >
+                    </div>
+                    <div id="document" class="mb-4">
+                        <label for="contenu_document" class="block text-lg font-medium mb-2">Course documment</label>
+                        <textarea 
+                            id="contenu_document" 
+                            name="contenu_document" 
+                            rows="4" 
+                            class="w-full p-2.5 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter course document cours" 
+                            ></textarea>
                     </div>
                     <div class="mb-4">
                         <label for="categorie" class="block text-lg font-medium mb-2">Category</label>
@@ -190,7 +210,7 @@
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['contenu']); ?></td>
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['scheduled_date_only']); ?></td>
                                 <td class="px-4 py-2 flex justify-start gap-2">
-                                    <a href="update_course.php?id=<?php echo $course['id']; ?>" class="text-blue-500 hover:text-blue-700">
+                                    <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-blue-500 hover:text-blue-700">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this course?');">
@@ -222,6 +242,37 @@
                 userMenu.classList.add('hidden');
             }
         });
+        document.addEventListener('DOMContentLoaded', function () {
+        const selectContenu = document.getElementById('contenu');
+        const contenuVideo = document.getElementById('video');
+        const contenuDocument = document.getElementById('document');
+
+        toggleFields(selectContenu.value);
+
+        selectContenu.addEventListener('change', function () {
+            toggleFields(this.value);
+        });
+
+        function toggleFields(value) {
+            if (value === 'video') {
+                contenuVideo.style.display = 'block';
+                contenuVideo.setAttribute('required', 'required');
+                contenuDocument.style.display = 'none';
+                contenuDocument.removeAttribute('required');
+            } else if (value === 'document') {
+                contenuVideo.style.display = 'none';
+                contenuVideo.removeAttribute('required');
+                contenuDocument.style.display = 'block';
+                contenuDocument.setAttribute('required', 'required');
+            } else {
+                contenuVideo.style.display = 'none';
+                contenuVideo.removeAttribute('required');
+                contenuDocument.style.display = 'none';
+                contenuDocument.removeAttribute('required');
+            }
+        }
+    });
+
     </script>
 </body>
 </html>

@@ -10,52 +10,71 @@ $db = $database->getConnection();
 $course = new Cours($db);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (
-        isset($_POST['title'], $_POST['contenu'], $_POST['categorie'], $_POST['description'], $_POST['scheduled_date']) &&
-        !empty($_POST['title']) &&
-        !empty($_POST['contenu']) &&
-        !empty($_POST['categorie']) &&
-        !empty($_POST['description']) &&
-        !empty($_POST['scheduled_date'])
-    ) {
-        $title = htmlspecialchars(strip_tags($_POST['title']));
-        $contenu = htmlspecialchars(strip_tags($_POST['contenu'])); 
-        $description = htmlspecialchars(strip_tags($_POST['description']));
-        
-        $featured_image = isset($_POST['featured_image']) ? htmlspecialchars(strip_tags($_POST['featured_image'])) : null;
-        $scheduled_date = htmlspecialchars(strip_tags($_POST['scheduled_date'])); 
-        
-        $category_id = intval(htmlspecialchars(strip_tags($_POST['categorie'])));
-        $enseignant_id = isset($_POST['enseignant_id']) ? intval($_POST['enseignant_id']) : null;
+    try {
+        // Validate required fields
+        if (
+            isset($_POST['title'], $_POST['contenu'], $_POST['categorie'], $_POST['description'], $_POST['scheduled_date']) &&
+            !empty($_POST['title']) &&
+            !empty($_POST['contenu']) &&
+            !empty($_POST['categorie']) &&
+            !empty($_POST['description']) &&
+            !empty($_POST['scheduled_date'])
+        ) {
+            // Sanitize inputs
+            $title = htmlspecialchars(strip_tags($_POST['title']));
+            $contenu = htmlspecialchars(strip_tags($_POST['contenu']));
+            $description = htmlspecialchars(strip_tags($_POST['description']));
+            
+            $featured_image = isset($_POST['featured_image']) ? htmlspecialchars(strip_tags($_POST['featured_image'])) : null;
+            $scheduled_date = htmlspecialchars(strip_tags($_POST['scheduled_date']));
+            
+            $category_id = intval(htmlspecialchars(strip_tags($_POST['categorie'])));
+            $enseignant_id = isset($_POST['enseignant_id']) ? intval($_POST['enseignant_id']) : null;
+            $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
 
-        $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
+            // Prepare data array
+            $data = [
+                'title' => $title,
+                'contenu' => $contenu,
+                'description' => $description,
+                'featured_image' => $featured_image,
+                'category_id' => $category_id,
+                'enseignant_id' => $enseignant_id,
+                'scheduled_date' => $scheduled_date,
+                'tags' => $tags
+            ];
+            if (!empty($_POST['contenu_document'])) {
+                $data['contenu_document'] = htmlspecialchars(strip_tags($_POST['contenu_document']));
+                unset($data['contenu']); 
+                $result = $course->create($data);
+            } elseif (!empty($_POST['contenu_video'])) {
+                $data['contenu_video'] = htmlspecialchars(strip_tags($_POST['contenu_video']));
+                $type = "video"; 
+                unset($data['contenu']);
+                $result = $course->create($data, $type);
+            } else {
+                throw new Exception("Content type not specified. Please provide a valid document or video.");
+            }
 
-        $data = [
-            'title' => $title,
-            'contenu' => $contenu,
-            'description' => $description,
-            'featured_image' => $featured_image,
-            'category_id' => $category_id,
-            'enseignant_id' => $enseignant_id,
-            'scheduled_date' => $scheduled_date, 
-            'tags' => $tags 
-        ];
-
-        if ($course->create($data)) {
-            header("Location: ../../public/front_office/add_cours.php");
-            exit;
+            if ($result) {
+                header("Location: ../../public/front_office/add_cours.php");
+                exit;
+            } else {
+                echo "Failed to create course. Please check your input and try again.";
+                echo "<pre>";
+                var_dump($data);
+                echo "</pre>";
+            }
         } else {
-            echo "Failed to create course. Please check your input and try again.";
-            echo "<pre>";
-            var_dump($data); 
-            echo "</pre>";
+            throw new Exception("All required fields must be filled. Please check your input.");
         }
-    } else {
-        echo "All required fields must be filled. Please check your input.";
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
 } else {
     echo "Invalid request method. Please use POST.";
 }
+
 
 // Delete a course 
 if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['id'])) {
