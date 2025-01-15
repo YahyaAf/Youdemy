@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $data['contenu_video'] = htmlspecialchars(strip_tags($_POST['contenu_video']));
                 $type = "video"; 
                 unset($data['contenu']);
-                $result = $course->create($data, $type);
+                $result = $course->create($data, "video");
             } else {
                 throw new Exception("Content type not specified. Please provide a valid document or video.");
             }

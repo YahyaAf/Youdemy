@@ -17,7 +17,8 @@
     $tags = $tag->read();
 
     $coursObj = new Cours($db);
-    $cours = $coursObj->readAll(); 
+    
+    
 
 ?>
 
@@ -179,9 +180,9 @@
         </div>
 
         <div class="flex-1">
-            <div class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-8 rounded-lg shadow-lg">
+        <div class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-8 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-bold mb-6 text-center text-gradient-to-r from-blue-400 to-purple-500">
-                    Courses List
+                    Courses List (Document Type)
                 </h2>
                 <table class="w-full text-sm text-left text-gray-200">
                     <thead>
@@ -195,7 +196,54 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($cours as $course): ?>
+                        <?php 
+                        $documentCourses = $coursObj->readAll();
+                        foreach ($documentCourses as $course): ?>
+                            <tr class="border-t border-gray-700">
+                                <td class="px-4 py-2"><?php echo htmlspecialchars($course['title']); ?></td>
+                                <td class="px-4 py-2"><?php echo htmlspecialchars($course['category_name']); ?></td>
+                                <td class="px-4 py-2">
+                                    <?php 
+                                        $tags = explode(',', $course['tags']);
+                                        foreach ($tags as $tag) {
+                                            echo "<span class='bg-blue-500 text-white rounded-full px-2 py-1 text-xs'>" . htmlspecialchars($tag) . "</span> ";
+                                        }
+                                    ?>
+                                </td>
+                                <td class="px-4 py-2"><?php echo htmlspecialchars($course['contenu']); ?></td>
+                                <td class="px-4 py-2"><?php echo htmlspecialchars($course['scheduled_date_only']); ?></td>
+                                <td class="px-4 py-2 flex justify-start gap-2">
+                                    <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-blue-500 hover:text-blue-700">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this course?');">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                <!-- Table for Video Courses -->
+                <h2 class="text-2xl font-bold mb-6 text-center text-gradient-to-r from-blue-400 to-purple-500 mt-5">
+                    Courses List (Video Type)
+                </h2>
+                <table class="w-full text-sm text-left text-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2">Course Title</th>
+                            <th class="px-4 py-2">Category</th>
+                            <th class="px-4 py-2">Tags</th>
+                            <th class="px-4 py-2">Content</th>
+                            <th class="px-4 py-2">Scheduled Date</th>
+                            <th class="px-4 py-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $videoCourses = $coursObj->readAll("video");
+                        foreach ($videoCourses as $course): ?>
                             <tr class="border-t border-gray-700">
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['title']); ?></td>
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['category_name']); ?></td>

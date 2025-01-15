@@ -44,7 +44,7 @@ class Cours {
         }
     }
     
-    public function create_by_video($data, $type = "video") {
+    public function create_by_video($data, $type) {
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO cours 
@@ -84,15 +84,20 @@ class Cours {
             } else {
                 throw new Exception("Invalid number of arguments for create method.");
             }
+        } elseif ($name === "readAll") {
+            if (count($args) === 0) {
+                return $this->readAll_by_document();
+            } elseif (count($args) === 1) {
+                return $this->readAll_by_video($args[0]);
+            } else {
+                throw new Exception("Invalid number of arguments for readAll method.");
+            }
         }
     
         throw new BadMethodCallException("Method $name does not exist.");
     }
     
-    
-    
-    
-    public function readAll() {
+    public function readAll_by_document() {
         try {
             $stmt = $this->pdo->query("
                 SELECT c.*, 
@@ -105,16 +110,43 @@ class Cours {
                 LEFT JOIN users u ON c.enseignant_id = u.id
                 LEFT JOIN cours_tags ct ON c.id = ct.cours_id
                 LEFT JOIN tags t ON ct.tag_id = t.id
+                WHERE c.contenu_document IS NOT NULL AND c.contenu_video IS NULL
                 GROUP BY c.id
                 ORDER BY c.created_at DESC
             ");
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("Error fetching courses: " . $e->getMessage());
+            error_log("Error fetching document-based courses: " . $e->getMessage());
             return [];
         }
     }
+    
+    public function readAll_by_video($type) {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags,
+                    DATE(c.scheduled_date) AS scheduled_date_only
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                WHERE c.contenu_video IS NOT NULL AND c.contenu_document IS NULL
+                GROUP BY c.id
+                ORDER BY c.created_at DESC
+            ");
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching video-based courses: " . $e->getMessage());
+            return [];
+        }
+    }
+    
     
     
 
