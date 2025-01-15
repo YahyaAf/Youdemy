@@ -11,7 +11,6 @@ $course = new Cours($db);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     try {
-        // Validate required fields
         if (
             isset($_POST['title'], $_POST['contenu'], $_POST['categorie'], $_POST['description'], $_POST['scheduled_date']) &&
             !empty($_POST['title']) &&
@@ -20,7 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             !empty($_POST['description']) &&
             !empty($_POST['scheduled_date'])
         ) {
-            // Sanitize inputs
             $title = htmlspecialchars(strip_tags($_POST['title']));
             $contenu = htmlspecialchars(strip_tags($_POST['contenu']));
             $description = htmlspecialchars(strip_tags($_POST['description']));
@@ -32,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $enseignant_id = isset($_POST['enseignant_id']) ? intval($_POST['enseignant_id']) : null;
             $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
 
-            // Prepare data array
             $data = [
                 'title' => $title,
                 'contenu' => $contenu,

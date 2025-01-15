@@ -93,8 +93,6 @@ class Cours {
                 throw new Exception("Invalid number of arguments for readAll method.");
             }
         }
-    
-        throw new BadMethodCallException("Method $name does not exist.");
     }
     
     public function readAll_by_document() {
@@ -146,35 +144,33 @@ class Cours {
             return [];
         }
     }
-    
-    
-    
 
-    // public function read($id) {
-    //     try {
-    //         $stmt = $this->pdo->prepare("
-    //             SELECT 
-    //                 c.*, 
-    //                 ca.name AS category_name, 
-    //                 u.username AS enseignant_name, 
-    //                 GROUP_CONCAT(t.name) AS tags
-    //             FROM cours c
-    //             LEFT JOIN categories ca ON c.category_id = ca.id
-    //             LEFT JOIN users u ON c.enseignant_id = u.id
-    //             LEFT JOIN cours_tags ct ON c.id = ct.cours_id
-    //             LEFT JOIN tags t ON ct.tag_id = t.id
-    //             WHERE c.id = :id
-    //             GROUP BY c.id
-    //         ");
-    //         $stmt->execute(['id' => $id]);
-    //         $course = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    //         return $course ?: null; 
-    //     } catch (PDOException $e) {
-    //         error_log("Error fetching course: " . $e->getMessage());
-    //         return null;
-    //     }
-    // }
+    public function read($id) {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags,
+                    DATE(c.scheduled_date) AS scheduled_date_only
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                WHERE c.id = $id
+                GROUP BY c.id
+                ORDER BY c.created_at DESC
+            ");
+            
+            $stmt->execute();
+            $course = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $course ?: null;
+        } catch (PDOException $e) {
+            error_log("Error fetching document-based courses: " . $e->getMessage());
+            return [];
+        }
+    }
 
     public function update($id, $data) {
         try {

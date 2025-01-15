@@ -213,7 +213,7 @@
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['contenu']); ?></td>
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['scheduled_date_only']); ?></td>
                                 <td class="px-4 py-2 flex justify-start gap-2">
-                                    <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-blue-500 hover:text-blue-700">
+                                    <a href="../../src/courses/coursUpdate.php?id=<?php echo $course['id']; ?>" class="text-blue-500 hover:text-blue-700">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this course?');">
@@ -258,7 +258,7 @@
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['contenu']); ?></td>
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['scheduled_date_only']); ?></td>
                                 <td class="px-4 py-2 flex justify-start gap-2">
-                                    <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-blue-500 hover:text-blue-700">
+                                    <a href="../../src/courses/coursUpdate.php?id=<?php echo $course['id']; ?>" class="text-blue-500 hover:text-blue-700">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="../../src/courses/coursHandler.php?id=<?php echo $course['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this course?');">
