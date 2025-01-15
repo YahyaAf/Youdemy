@@ -30,6 +30,7 @@
             $current_scheduled_date = $cours_data['scheduled_date_only'];
             $current_video = $cours_data['contenu_video'];
             $current_document = $cours_data['contenu_document'];
+            $current_tags = $cours_data['tags'];
             
         } else {
             echo "Cours not found!";
@@ -39,6 +40,38 @@
         echo "Cours ID is missing!";
         exit();
     }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_GET['id'])) {
+            $cours_id = $_GET['id'];
+            
+            $data = [
+                'title' => $_POST['title'] ?? null,
+                'description' => $_POST['description'] ?? null,
+                'contenu' => $_POST['contenu'] ?? null,
+                'featured_image' => $_POST['featured_image'] ?? null,
+                'category_id' => $_POST['categorie'] ?? null,
+                'scheduled_date' => $_POST['scheduled_date'] ?? null, 
+                'contenu_video' => $_POST['contenu_video'] ?? null,   
+                'contenu_document' => $_POST['contenu_document'] ?? null, 
+                'tags' => $_POST['tags'] ?? [] 
+            ];
+    
+            if (!empty($data['title']) && !empty($data['contenu']) && !empty($data['category_id'])) {
+                if ($cours->update($cours_id, $data)) {
+                    header("Location: ../../public/front_office/add_cours.php");
+                    exit();
+                } else {
+                    echo "Failed to update the course.";
+                }
+            } else {
+                echo "Please fill in all required fields.";
+            }
+        } else {
+            echo "Course ID is missing!";
+        }
+    }
+    
 ?>
 
 <!DOCTYPE html>
@@ -135,9 +168,7 @@
                     class="w-full p-2.5 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     multiple>
                     <?php foreach ($tags as $tag): ?>
-                        <option value="<?php echo htmlspecialchars($tag['id']); ?>">
-                            <?php echo htmlspecialchars($tag['name']); ?>
-                        </option>
+                        <option value="<?php echo $tag['id']; ?>" <?php echo in_array($tag['id'], explode(',', $current_tags)) ? 'selected' : ''; ?>><?php echo $tag['name']; ?></option>
                     <?php endforeach; ?>
                 </select>
                 <p class="text-sm text-gray-400 mt-2">Hold down the Ctrl (Windows) or Command (Mac) key to select multiple tags.</p>

@@ -108,17 +108,20 @@ class Cours {
                 LEFT JOIN users u ON c.enseignant_id = u.id
                 LEFT JOIN cours_tags ct ON c.id = ct.cours_id
                 LEFT JOIN tags t ON ct.tag_id = t.id
-                WHERE c.contenu_document IS NOT NULL AND c.contenu_video IS NULL
+                WHERE (c.contenu_document IS NOT NULL AND c.contenu_document != '') 
+                  AND (c.contenu_video IS NULL OR c.contenu_video = '')
                 GROUP BY c.id
                 ORDER BY c.created_at DESC
             ");
-            
+    
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error fetching document-based courses: " . $e->getMessage());
             return [];
         }
     }
+    
+    
     
     public function readAll_by_video($type) {
         try {
@@ -133,7 +136,8 @@ class Cours {
                 LEFT JOIN users u ON c.enseignant_id = u.id
                 LEFT JOIN cours_tags ct ON c.id = ct.cours_id
                 LEFT JOIN tags t ON ct.tag_id = t.id
-                WHERE c.contenu_video IS NOT NULL AND c.contenu_document IS NULL
+                WHERE (c.contenu_video IS NOT NULL AND c.contenu_video != '') 
+                  AND (c.contenu_document IS NULL OR c.contenu_document = '')
                 GROUP BY c.id
                 ORDER BY c.created_at DESC
             ");
@@ -174,37 +178,43 @@ class Cours {
 
     public function update($id, $data) {
         try {
-            if (empty($data['title']) || empty($data['content']) || empty($data['category_id'])) {
+            if (empty($data['title']) || empty($data['contenu']) || empty($data['category_id'])) {
                 throw new Exception("Missing required fields.");
             }
-
+    
             $stmt = $this->pdo->prepare("
                 UPDATE cours
                 SET title = :title, description = :description, contenu = :contenu, featured_image = :featured_image, 
-                    category_id = :category_id, updated_at = NOW()
+                    category_id = :category_id, scheduled_date = :scheduled_date, contenu_video = :contenu_video, 
+                    contenu_document = :contenu_document, updated_at = NOW()
                 WHERE id = :id
             ");
-
+    
             $stmt->execute([
                 'id' => $id,
                 'title' => $data['title'],
                 'description' => $data['description'],
                 'contenu' => $data['contenu'],
                 'featured_image' => $data['featured_image'],
-                'category_id' => $data['category_id']
+                'category_id' => $data['category_id'],
+                'scheduled_date' => $data['scheduled_date'],
+                'contenu_video' => $data['contenu_video'],
+                'contenu_document' => $data['contenu_document']
             ]);
     
             $this->updateTags($id, $data['tags']);
-    
             return true;
         } catch (PDOException $e) {
-            error_log("Error updating course: " . $e->getMessage());
+            error_log("PDO Error: " . $e->getMessage());
+            echo "Error updating course: " . $e->getMessage();
             return false;
         } catch (Exception $e) {
             error_log($e->getMessage());
+            echo $e->getMessage();
             return false;
         }
     }
+    
     
 
     public function delete($id) {
