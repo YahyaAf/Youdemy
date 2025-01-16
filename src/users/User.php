@@ -7,6 +7,7 @@ abstract class User {
     protected $password;
     protected $email;
     protected $role;
+    protected $table = 'users'; 
 
     public function __construct($db, $username, $password, $email, $role) {
         $this->db = $db;
@@ -24,5 +25,18 @@ abstract class User {
     public function logout() {
         session_unset();
         session_destroy();
+    }
+
+    public function readAll() {
+        try {
+            $sql = "SELECT * FROM {$this->table}";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 }
