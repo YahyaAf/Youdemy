@@ -68,8 +68,7 @@ class Etudiant extends User {
     }
 
     public function logout() {
-        session_unset();
-        session_destroy();
+        parent::logout();
         return true;
     }
 }
