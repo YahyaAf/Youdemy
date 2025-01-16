@@ -36,14 +36,14 @@
     <!-- Navbar -->
     <nav class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-white text-2xl font-bold tracking-wide">
+            <a href="../index.php" class="text-white text-2xl font-bold tracking-wide">
                 Youdemy-Platform
             </a>
             <div class="flex items-center space-x-6">
-                <a href="pages/add_course.php" class="hover:text-blue-400 transition duration-300">Add Course</a>
-                <a href="pages/my_courses.php" class="hover:text-blue-400 transition duration-300">My Courses</a>
-                <a href="pages/signup.php" class="hover:text-blue-400 transition duration-300">Sign Up</a>
-                <a href="pages/login.php" class="hover:text-blue-400 transition duration-300">Login</a>
+                <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">Add Course</a>
+                <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">My Courses</a>
+                <a href="signup.php" class="hover:text-blue-400 transition duration-300">Sign Up</a>
+                <a href="login.php" class="hover:text-blue-400 transition duration-300">Login</a>
                 <div class="relative">
                     <button 
                         id="userMenuButton" 
@@ -53,7 +53,7 @@
                     </button>
                     <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg hidden">
                         <a href="pages/account.php" class="block px-4 py-2 hover:bg-gray-700">Account</a>
-                        <a href="../src/users/logoutHandler.php" class="block px-4 py-2 hover:bg-gray-700">Logout</a>
+                        <a href="../../src/users/logoutHandler.php" class="block px-4 py-2 hover:bg-gray-700">Logout</a>
                     </div>
                 </div>
             </div>

@@ -19,16 +19,16 @@
             <!-- Links and Buttons -->
             <div class="flex items-center space-x-6 text-white">
                 <!-- Navigation Links -->
-                <a href="pages/add_course.php" class="hover:text-blue-400 transition duration-300">
+                <a href="front_office/add_cours.php" class="hover:text-blue-400 transition duration-300">
                     Add Course
                 </a>
-                <a href="pages/my_courses.php" class="hover:text-blue-400 transition duration-300">
+                <a href="front_office/my_courses.php" class="hover:text-blue-400 transition duration-300">
                     My Courses
                 </a>
-                <a href="pages/signup.php" class="hover:text-blue-400 transition duration-300">
+                <a href="front_office/signup.php" class="hover:text-blue-400 transition duration-300">
                     Sign Up
                 </a>
-                <a href="pages/login.php" class="hover:text-blue-400 transition duration-300">
+                <a href="front_office/login.php" class="hover:text-blue-400 transition duration-300">
                     Login
                 </a>
                 <!-- Dropdown Menu -->
