@@ -1,3 +1,27 @@
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+use config\Database;
+use Src\categories\Category;
+use Src\tags\Tag;
+use Src\courses\Cours;
+
+session_start();
+
+$database = new Database("youdemy");
+$db = $database->getConnection();
+
+// categorie
+$category = new Category($db);
+$categories = $category->read();
+
+// tags
+$tag = new Tag($db);
+$tags = $tag->read();
+
+$coursObj = new Cours($db);
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,7 +122,71 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 mx-auto mb-5" style="max-width: 90%;">
+    <div class="px-4 sm:px-8 lg:px-16 py-8  from-gray-900 to-black">
+        <h2 class="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-10">
+            Featured Courses
+        </h2>
+        <h3 class="text-3xl font-semibold text-white mb-6">
+            📄 Document Courses
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <?php 
+            $documentCourses = $coursObj->readAll();
+            foreach ($documentCourses as $course): ?>
+                <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                    <img src="<?php echo htmlspecialchars($course['featured_image']); ?>" 
+                        alt="Course Image" 
+                        class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-blue-400 mb-2">
+                            <?php echo htmlspecialchars($course['title']); ?>
+                        </h4>
+                        <p class="text-sm text-gray-400 mb-4">
+                            <?php echo htmlspecialchars($course['description']); ?>
+                        </p>
+                        <p class="text-gray-200 mb-6">
+                            <?php echo htmlspecialchars($course['contenu_document']); ?>
+                        </p>
+                        <a href="#" 
+                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
+                            View Course
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <h3 class="text-3xl font-semibold text-white mt-12 mb-6">
+            🎥 Video Courses
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <?php 
+            $videoCourses = $coursObj->readAll("video"); 
+            foreach ($videoCourses as $course): ?>
+                <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                    <img src="<?php echo htmlspecialchars($course['featured_image']); ?>" 
+                        alt="Course Image" 
+                        class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-blue-400 mb-2">
+                            <?php echo htmlspecialchars($course['title']); ?>
+                        </h4>
+                        <p class="text-sm text-gray-400 mb-4">
+                            <?php echo htmlspecialchars($course['description']); ?>
+                        </p>
+                        <iframe 
+                            src="<?php echo htmlspecialchars($course['contenu_video']); ?>" 
+                            class="w-full h-48 mb-4 rounded-md"
+                            frameborder="0" 
+                            allowfullscreen>
+                        </iframe>
+                        <a href="#" 
+                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
+                            View Course
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
     <!-- Footer -->
     <footer class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-6 mt-auto">
