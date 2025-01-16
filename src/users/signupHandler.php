@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = new Enseignant($db, $username, $password, $email, $profile_picture_url);
         } else {
             $_SESSION['error'] = "Invalid role selected.";
-            header("Location: signup.php");
+            header("Location: ../../public/front_office/signup.php");
             exit;
         }
 
@@ -40,12 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } else {
             $_SESSION['error'] = "Registration failed. Please try again.";
-            header("Location: signup.php");
+            header("Location: ../../public/front_office/signup.php");
             exit;
         }
     } catch (Exception $e) {
         $_SESSION['error'] = "An error occurred: " . $e->getMessage();
-        header("Location: signup.php");
+        header("Location: ../../public/front_office/signup.php");
         exit;
     }
 } else {
