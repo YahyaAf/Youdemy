@@ -9,6 +9,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     activation ENUM('pending', 'baned','accepted'),
+    role ENUM('admin', 'etudiant','enseignant'),
     profile_picture_url VARCHAR(255)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

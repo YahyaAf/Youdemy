@@ -96,11 +96,11 @@
 
                 <!-- Password -->
                 <div>
-                    <label for="password_hash" class="block text-sm font-medium text-gray-300">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
                     <input 
                         type="password" 
-                        id="password_hash" 
-                        name="password_hash" 
+                        id="password" 
+                        name="password" 
                         class="w-full mt-1 px-4 py-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
                         placeholder="Enter your password" 
                         required>
@@ -113,9 +113,23 @@
                         type="url" 
                         id="profile_picture_url" 
                         name="profile_picture_url" 
-                        placeholder="Enter your profile_picture_url" 
+                        placeholder="Enter your profile picture URL" 
                         class="w-full mt-1 px-4 py-2 bg-gray-700 text-gray-400 border border-gray-600 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-400 focus:outline-none"
                         required>
+                </div>
+
+                <!-- Role Selection -->
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-300">Role</label>
+                    <select 
+                        id="role" 
+                        name="role" 
+                        class="w-full mt-1 px-4 py-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" 
+                        required>
+                        <option value="">-- Please choose a role --</option>
+                        <option value="etudiant">Etudiant</option>
+                        <option value="enseignant">Enseignant</option>
+                    </select>
                 </div>
 
                 <!-- Submit Button -->
