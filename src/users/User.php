@@ -40,4 +40,23 @@ abstract class User {
             return false;
         }
     }
+
+    public function update($id, $username, $email, $profile_picture_url) {
+        try {
+            $sql = "UPDATE users
+                SET username = :username, email = :email, profile_picture_url = :profile_picture_url
+                WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':profile_picture_url', $profile_picture_url);
+
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
 }

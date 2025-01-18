@@ -1,19 +1,32 @@
-<!--
+<?php
+  session_start();
 
-=========================================================
-* Now UI Dashboard - v1.5.0
-=========================================================
+  require_once __DIR__ . '/../../vendor/autoload.php';
 
-* Product Page: https://www.creative-tim.com/product/now-ui-dashboard
-* Copyright 2019 Creative Tim (http://www.creative-tim.com)
+  use config\Database;
+  use Src\users\Admin;
 
-* Designed by www.invisionapp.com Coded by www.creative-tim.com
+  $database = new Database("youdemy");
+  $db = $database->getConnection();
 
-=========================================================
+  $user = new Admin($db);
+  $userId = $_SESSION['user']['id'];
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  if ($_SERVER["REQUEST_METHOD"] === "POST") {
+      $username = htmlspecialchars(strip_tags($_POST['username']));
+      $email = htmlspecialchars(strip_tags($_POST['email']));
+      $profile_picture_url = htmlspecialchars(strip_tags($_POST['profile_picture_url']));
 
--->
+      if ($user->update($userId, $username, $email, $profile_picture_url)) {
+          header("Location: profile.php");
+          exit();
+      } else {
+          echo "Failed to update profile.";
+      }
+  }
+
+  
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -178,74 +191,34 @@
                 <h5 class="title">Edit Profile</h5>
               </div>
               <div class="card-body">
-                <form>
-                  <div class="row">
-                    <div class="col-md-5 pr-1">
-                      <div class="form-group">
-                        <label>Company (disabled)</label>
-                        <input type="text" class="form-control" disabled="" placeholder="Company" value="Creative Code Inc.">
-                      </div>
-                    </div>
-                    <div class="col-md-3 px-1">
-                      <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" class="form-control" placeholder="Username" value="michael23">
-                      </div>
-                    </div>
-                    <div class="col-md-4 pl-1">
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" placeholder="Email">
-                      </div>
-                    </div>
-                  </div>
+              <form action="profile.php" method="POST" class="flex items-center space-x-3">
                   <div class="row">
                     <div class="col-md-6 pr-1">
                       <div class="form-group">
-                        <label>First Name</label>
-                        <input type="text" class="form-control" placeholder="Company" value="Mike">
+                        <label>Username</label>
+                        <input name="username" type="text" class="form-control" placeholder="Enter Username" value="<?php echo $_SESSION['user']['username'] ?>">
                       </div>
                     </div>
                     <div class="col-md-6 pl-1">
                       <div class="form-group">
-                        <label>Last Name</label>
-                        <input type="text" class="form-control" placeholder="Last Name" value="Andrew">
+                        <label>Email Address</label>
+                        <input name="email" type="email" class="form-control" placeholder="Enter Email" value="<?php echo $_SESSION['user']['email'] ?>">
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-md-6 pl-1 ml-3">
+                      <div class="form-group">
+                        <label>Profile Image</label>
+                        <input name="profile_picture_url" placeholder="Enter Image" type="url" class="form-control" value="<?php echo $_SESSION['user']['profile_picture_url'] ?>">
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Original form rows below -->
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4 pr-1">
-                      <div class="form-group">
-                        <label>City</label>
-                        <input type="text" class="form-control" placeholder="City" value="Mike">
-                      </div>
-                    </div>
-                    <div class="col-md-4 px-1">
-                      <div class="form-group">
-                        <label>Country</label>
-                        <input type="text" class="form-control" placeholder="Country" value="Andrew">
-                      </div>
-                    </div>
-                    <div class="col-md-4 pl-1">
-                      <div class="form-group">
-                        <label>Postal Code</label>
-                        <input type="number" class="form-control" placeholder="ZIP Code">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>About Me</label>
-                        <textarea rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="Mike">Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</textarea>
+                        <button class="btn btn-success btn-lg px-4 py-2">Save</button>
                       </div>
                     </div>
                   </div>
@@ -261,11 +234,11 @@
               <div class="card-body">
                 <div class="author">
                   <a href="#">
-                    <img class="avatar border-gray" src="../assets/img/mike.jpg" alt="...">
-                    <h5 class="title">Mike Andrew</h5>
+                    <img class="avatar border-gray" src="<?php echo $_SESSION['user']['profile_picture_url'] ?>" alt="...">
+                    <h5 class="title"><?php echo $_SESSION['user']['username'] ?></h5>
                   </a>
                   <p class="description">
-                    michael24
+                    Admin 
                   </p>
                 </div>
                 <p class="description text-center">
