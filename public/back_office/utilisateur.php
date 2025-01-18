@@ -30,6 +30,18 @@ if (isset($_SESSION['user'])) {
           echo "Échec de la suppression de l'utilisateur.";
       }
     }
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+      $role = $_POST['role'];
+      $id = isset($_POST['id']) ? htmlspecialchars(strip_tags($_POST['id'])) : null; 
+  
+      if ($user->updateUserRole($id, $role)) {
+          header("Location: utilisateur.php"); 
+          exit();
+      } else {
+          echo "Failed to update article.";
+      }
+    }
 }
 ?>
 
@@ -225,7 +237,7 @@ if (isset($_SESSION['user'])) {
                         <td class="px-6 py-4"><?php echo htmlspecialchars($u['username']); ?></td>
                         <td class="px-6 py-4"><?php echo htmlspecialchars($u['email']); ?></td>
                         <td class="px-6 py-4">
-                            <form action="" method="POST" class="flex items-center space-x-3">
+                            <form action="koraa.php" method="POST" class="flex items-center space-x-3">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
                                 
                                 <select name="status" id="status_<?php echo $u['id']; ?>" class="bg-gray-200 text-gray-700 border border-gray-400 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -240,7 +252,7 @@ if (isset($_SESSION['user'])) {
                             </form>
                         </td>
                         <td class="px-6 py-4">
-                            <form action="" method="POST" class="flex items-center space-x-3">
+                            <form action="utilisateur.php" method="POST" class="flex items-center space-x-3">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
                                 
                                 <select name="role" id="role_<?php echo $u['id']; ?>" class="bg-gray-200 text-gray-700 border border-gray-400 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
