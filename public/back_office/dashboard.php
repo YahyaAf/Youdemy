@@ -52,7 +52,7 @@
       </div>
       <div class="sidebar-wrapper" id="sidebar-wrapper">
         <ul class="nav">
-          <li class="active ">
+          <li class="">
             <a href="./dashboard.php">
               <i class="now-ui-icons design_app"></i>
               <p>Dashboard</p>
@@ -74,12 +74,6 @@
             <a href="./utilisateur.php">
               <i class="now-ui-icons ui-1_bell-53"></i>
               <p>Utilisateurs</p>
-            </a>
-          </li>
-          <li>
-            <a href="./profile.php">
-              <i class="now-ui-icons users_single-02"></i>
-              <p>User Profile</p>
             </a>
           </li>
           <li>

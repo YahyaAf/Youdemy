@@ -98,46 +98,34 @@ if (isset($_SESSION['user'])) {
       </div>
       <div class="sidebar-wrapper" id="sidebar-wrapper">
         <ul class="nav">
-          <li>
+          <li class=" ">
             <a href="./dashboard.php">
               <i class="now-ui-icons design_app"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li>
-            <a href="./icons.php">
+            <a href="./tag.php">
               <i class="now-ui-icons education_atom"></i>
-              <p>Icons</p>
+              <p>Tags</p>
             </a>
           </li>
           <li>
-            <a href="./map.php">
+            <a href="./categorie.php">
               <i class="now-ui-icons location_map-big"></i>
-              <p>Maps</p>
+              <p>Categories</p>
             </a>
           </li>
-          <li class="active ">
-            <a href="./notifications.php">
+          <li>
+            <a href="./utilisateur.php">
               <i class="now-ui-icons ui-1_bell-53"></i>
-              <p>Notifications</p>
+              <p>Utilisateurs</p>
             </a>
           </li>
           <li>
-            <a href="./user.php">
-              <i class="now-ui-icons users_single-02"></i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          <li>
-            <a href="./tables.php">
+            <a href="./publication.php">
               <i class="now-ui-icons design_bullet-list-67"></i>
-              <p>Table List</p>
-            </a>
-          </li>
-          <li>
-            <a href="./typography.php">
-              <i class="now-ui-icons text_caps-small"></i>
-              <p>Typography</p>
+              <p>Publications</p>
             </a>
           </li>
           <li class="active-pro">
@@ -199,14 +187,6 @@ if (isset($_SESSION['user'])) {
                   <a class="dropdown-item" href="profile.php">Account</a>
                   <a class="dropdown-item" href="../../src/users/logoutHandler.php">Logout</a>
                 </div>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#pablo">
-                  <i class="now-ui-icons users_single-02"></i>
-                  <p>
-                    <span class="d-lg-none d-md-block">Account</span>
-                  </p>
-                </a>
               </li>
             </ul>
           </div>
