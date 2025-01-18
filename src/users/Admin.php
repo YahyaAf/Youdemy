@@ -37,6 +37,43 @@ class Admin extends User {
         return $stmt->execute();
     }
 
+    public function loginAdmin($email, $password) {
+        try {
+            $sql = "SELECT * FROM {$this->table} WHERE email = :email LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+        
+            $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if ($user && password_verify($password, $user['password_hash'])) {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['user'] = [
+                    'id' => $user['id'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'role' => $user['role'],
+                    'profile_picture_url' => $user['profile_picture_url']
+                ];
+
+                return true;
+
+            } else {
+                return false;
+            }
+        } catch (\PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function logout() {
+        parent::logout();
+        return true;
+    }
+
 }
 
 ?>
