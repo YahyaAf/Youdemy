@@ -17,7 +17,8 @@ abstract class User {
         $this->role = $role;
     }
 
-    abstract public function register();
+    public function register(){
+    }
 
     public function login() {
     }

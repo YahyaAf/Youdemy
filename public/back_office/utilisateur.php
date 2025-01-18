@@ -4,8 +4,7 @@ session_start();
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use config\Database;
-use Src\users\Enseignant;
-use Src\users\Etudiant;
+use Src\users\Admin;
 
 $database = new Database("youdemy");
 $db = $database->getConnection();
@@ -16,16 +15,21 @@ if (isset($_SESSION['user'])) {
     $email = $_SESSION['user']['email'];
     $profile_picture_url = $_SESSION['user']['profile_picture_url'];
 
-    if ($role === 'etudiant') {
-        $user = new Etudiant($db, $username, "", $email, $profile_picture_url);
-    } elseif ($role === 'enseignant') {
-        $user = new Enseignant($db, $username, "", $email, $profile_picture_url);
-    } else {
-        echo "Invalid role.";
-        exit;
-    }
+    $user = new Admin($db);
+   
 
     $users = $user->readAll(); 
+
+    // supression d'un user
+    $id = isset($_GET['id']) ? htmlspecialchars(strip_tags($_GET['id'])) : null;
+    if ($id) {
+      if ($user->deleteUser($id)) {
+          header("Location: utilisateur.php");
+          exit();
+      } else {
+          echo "Échec de la suppression de l'utilisateur.";
+      }
+    }
 }
 ?>
 
@@ -211,6 +215,7 @@ if (isset($_SESSION['user'])) {
                 <th class="px-6 py-3 text-left text-sm font-semibold">Email</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Activation</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Role</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">Action</th>
             </tr>
         </thead>
         <tbody class="text-gray-700">
@@ -248,6 +253,9 @@ if (isset($_SESSION['user'])) {
                                     Save
                                 </button>
                             </form>
+                        </td>
+                        <td class="px-6 py-4">
+                          <a href="utilisateur.php?id=<?php echo htmlspecialchars($u['id']); ?>" onclick="return confirm('Êtes-vous sûr de vouloir banned cet utilisateur ?');" class="btn btn-danger btn-sm">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
