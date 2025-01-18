@@ -32,30 +32,30 @@ if (isset($_SESSION['user'])) {
     }
 
     // Update the role of a user
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'updateRole') {
-  $role = $_POST['role'];
-  $id = isset($_POST['id']) ? htmlspecialchars(strip_tags($_POST['id'])) : null;
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'updateRole') {
+      $role = $_POST['role'];
+      $id = isset($_POST['id']) ? htmlspecialchars(strip_tags($_POST['id'])) : null;
 
-  if ($user->updateUserRole($id, $role)) {
-      header("Location: utilisateur.php");
-      exit();
-  } else {
-      echo "Failed to update role.";
-  }
-}
+      if ($user->updateUserRole($id, $role)) {
+          header("Location: utilisateur.php");
+          exit();
+      } else {
+          echo "Failed to update role.";
+      }
+    }
 
-// Update the status of a user
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'updateStatus') {
-  $status = $_POST['status'];
-  $id = isset($_POST['id']) ? htmlspecialchars(strip_tags($_POST['id'])) : null;
+    // Update the status of a user
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'updateStatus') {
+      $status = $_POST['status'];
+      $id = isset($_POST['id']) ? htmlspecialchars(strip_tags($_POST['id'])) : null;
 
-  if ($user->updateActivationStatus($id, $status)) {
-      header("Location: utilisateur.php");
-      exit();
-  } else {
-      echo "Failed to update status.";
-  }
-}
+      if ($user->updateActivationStatus($id, $status)) {
+          header("Location: utilisateur.php");
+          exit();
+      } else {
+          echo "Failed to update status.";
+      }
+    }
 }
 ?>
 
@@ -251,38 +251,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
                                             <td class="px-6 py-4"><?php echo htmlspecialchars($u['username']); ?></td>
                                             <td class="px-6 py-4"><?php echo htmlspecialchars($u['email']); ?></td>
                                             <td class="px-6 py-4">
-    <form action="utilisateur.php" method="POST" class="flex items-center space-x-3">
-        <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
-        <input type="hidden" name="action" value="updateStatus">
+                                              <form action="utilisateur.php" method="POST" class="flex items-center space-x-3">
+                                                  <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
+                                                  <input type="hidden" name="action" value="updateStatus">
 
-        <select name="status" id="status_<?php echo $u['id']; ?>" class="bg-gray-200 text-gray-700 border border-gray-400 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="pending" <?php echo htmlspecialchars($u['activation']) === 'pending' ? 'selected' : ''; ?>>Pending</option>
-            <option value="accepted" <?php echo htmlspecialchars($u['activation']) === 'accepted' ? 'selected' : ''; ?>>Accepted</option>
-            <option value="baned" <?php echo htmlspecialchars($u['activation']) === 'baned' ? 'selected' : ''; ?>>Banned</option>
-        </select>
+                                                  <select name="status" id="status_<?php echo $u['id']; ?>" class="bg-gray-200 text-gray-700 border border-gray-400 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                                      <option value="pending" <?php echo htmlspecialchars($u['activation']) === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                                                      <option value="accepted" <?php echo htmlspecialchars($u['activation']) === 'accepted' ? 'selected' : ''; ?>>Accepted</option>
+                                                      <option value="baned" <?php echo htmlspecialchars($u['activation']) === 'baned' ? 'selected' : ''; ?>>Banned</option>
+                                                  </select>
 
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Save
-        </button>
-    </form>
-</td>
-<td class="px-6 py-4">
-    <form action="utilisateur.php" method="POST" class="flex items-center space-x-3">
-        <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
-        <input type="hidden" name="action" value="updateRole">
+                                                  <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                      Save
+                                                  </button>
+                                              </form>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                              <form action="utilisateur.php" method="POST" class="flex items-center space-x-3">
+                                                  <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
+                                                  <input type="hidden" name="action" value="updateRole">
 
-        <select name="role" id="role_<?php echo $u['id']; ?>" class="bg-gray-200 text-gray-700 border border-gray-400 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="admin" <?php echo htmlspecialchars($u['role']) === 'admin' ? 'selected' : ''; ?>>Admin</option>
-            <option value="etudiant" <?php echo htmlspecialchars($u['role']) === 'etudiant' ? 'selected' : ''; ?>>Etudiant</option>
-            <option value="enseignant" <?php echo htmlspecialchars($u['role']) === 'enseignant' ? 'selected' : ''; ?>>Enseignant</option>
-        </select>
+                                                  <select name="role" id="role_<?php echo $u['id']; ?>" class="bg-gray-200 text-gray-700 border border-gray-400 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                                      <option value="admin" <?php echo htmlspecialchars($u['role']) === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                                                      <option value="etudiant" <?php echo htmlspecialchars($u['role']) === 'etudiant' ? 'selected' : ''; ?>>Etudiant</option>
+                                                      <option value="enseignant" <?php echo htmlspecialchars($u['role']) === 'enseignant' ? 'selected' : ''; ?>>Enseignant</option>
+                                                  </select>
 
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Save
-        </button>
-    </form>
-</td>
-
+                                                  <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                      Save
+                                                  </button>
+                                              </form>
+                                          </td>
                                             <td class="px-6 py-4">
                                               <a href="utilisateur.php?id=<?php echo htmlspecialchars($u['id']); ?>" onclick="return confirm('Êtes-vous sûr de vouloir banned cet utilisateur ?');" class="btn btn-danger btn-sm">Supprimer</a>
                                             </td>

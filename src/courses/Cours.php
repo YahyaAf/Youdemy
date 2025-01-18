@@ -259,6 +259,15 @@ class Cours {
         }
     }
 
+    public function updateStatusCours($userId, $status)
+    {
+        $sql = "UPDATE cours SET status = :status WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
     // public function countCourses() {
     //     try {
     //         $stmt = $this->pdo->query("SELECT COUNT(*) AS cours_count FROM cours");
