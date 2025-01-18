@@ -209,8 +209,8 @@ if (isset($_SESSION['user'])) {
             <tr>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Name</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Email</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold">Role</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Activation</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">Role</th>
             </tr>
         </thead>
         <tbody class="text-gray-700">
@@ -219,7 +219,6 @@ if (isset($_SESSION['user'])) {
                     <tr class="border-t border-gray-300 hover:bg-gray-100 transition duration-200">
                         <td class="px-6 py-4"><?php echo htmlspecialchars($u['username']); ?></td>
                         <td class="px-6 py-4"><?php echo htmlspecialchars($u['email']); ?></td>
-                        <td class="px-6 py-4"><?php echo htmlspecialchars($u['role']); ?></td>
                         <td class="px-6 py-4">
                             <form action="" method="POST" class="flex items-center space-x-3">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
@@ -228,6 +227,21 @@ if (isset($_SESSION['user'])) {
                                     <option value="pending" <?php echo htmlspecialchars($u['activation']) === 'pending' ? 'selected' : ''; ?>>Pending</option>
                                     <option value="accepted" <?php echo htmlspecialchars($u['activation']) === 'accepted' ? 'selected' : ''; ?>>Accepted</option>
                                     <option value="baned" <?php echo htmlspecialchars($u['activation']) === 'baned' ? 'selected' : ''; ?>>Banned</option>
+                                </select>
+                                
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    Save
+                                </button>
+                            </form>
+                        </td>
+                        <td class="px-6 py-4">
+                            <form action="" method="POST" class="flex items-center space-x-3">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['id']); ?>">
+                                
+                                <select name="role" id="role_<?php echo $u['id']; ?>" class="bg-gray-200 text-gray-700 border border-gray-400 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                    <option value="admin" <?php echo htmlspecialchars($u['role']) === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                                    <option value="etudiant" <?php echo htmlspecialchars($u['role']) === 'etudiant' ? 'selected' : ''; ?>>Etudiant</option>
+                                    <option value="enseignant" <?php echo htmlspecialchars($u['role']) === 'enseignant' ? 'selected' : ''; ?>>Enseignant</option>
                                 </select>
                                 
                                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
