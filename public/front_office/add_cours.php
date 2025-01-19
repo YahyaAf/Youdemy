@@ -57,7 +57,7 @@
                             id="userMenuButton"
                             class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg shadow transition duration-300"
                         >
-                            <span>User</span>
+                            <span><?php echo $_SESSION['user']['username'] ?></span>
                         </button>
                         <div 
                             id="userMenu"

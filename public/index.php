@@ -36,17 +36,13 @@ $isLoggedIn = $user->isLoggedIn();
 </head>
 <body class="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white min-h-screen flex flex-col">
 
-    <!-- Navbar -->
     <nav class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <!-- Logo -->
             <a href="#" class="text-white text-2xl font-bold tracking-wide">
                 Youdemy-Platform
             </a>
 
-            <!-- Links and Buttons -->
             <div class="flex items-center space-x-6 text-white">
-                <!-- Navigation Links -->
                 <a href="front_office/add_cours.php" class="hover:text-blue-400 transition duration-300">
                     Add Course
                 </a>
@@ -55,13 +51,12 @@ $isLoggedIn = $user->isLoggedIn();
                 </a>
                 
                 <?php if ($isLoggedIn): ?>
-                    <!-- Dropdown Menu for Logged In User -->
                     <div class="relative">
                         <button 
                             id="userMenuButton"
                             class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg shadow transition duration-300"
                         >
-                            <span>User</span>
+                            <span><?php echo $_SESSION['user']['username'] ?></span>
                         </button>
                         <div 
                             id="userMenu"
@@ -82,7 +77,6 @@ $isLoggedIn = $user->isLoggedIn();
                         </div>
                     </div>
                 <?php else: ?>
-                    <!-- Login and Sign Up for Not Logged In User -->
                     <a href="front_office/signup.php" class="hover:text-blue-400 transition duration-300">
                         Sign Up
                     </a>
