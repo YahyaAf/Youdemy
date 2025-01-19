@@ -21,9 +21,8 @@
 
     $user = new Admin($db);
     $isLoggedIn = $user->isLoggedIn();
+    $userRole = $_SESSION['user']['role'] ?? ''; 
     
-    
-
 ?>
 
 <!DOCTYPE html>
@@ -44,16 +43,20 @@
                 Youdemy-Platform
             </a>
             <div class="flex items-center space-x-6 text-white">
-                <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">
-                    Add Course
-                </a>
-                <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">
-                    My Courses
-                </a>
-                <a href="statistique.php" class="hover:text-blue-400 transition duration-300">
-                    Statistique
-                </a>
-                
+                <?php if ($isLoggedIn && $userRole == 'enseignant'): ?>
+                    <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">
+                        Add Course
+                    </a>
+                    <a href="statistique.php" class="hover:text-blue-400 transition duration-300">
+                        Statistique
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($isLoggedIn && $userRole == 'etudiant'): ?>
+                    <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">
+                        My Courses
+                    </a>
+                <?php endif; ?>
                 <?php if ($isLoggedIn): ?>
                     <div class="relative">
                         <button 
@@ -88,11 +91,10 @@
                         Login
                     </a>
                 <?php endif; ?>
+
             </div>
         </div>
     </nav>
-   
-    
     <div class="flex justify-between gap-10 mt-10">
         <div class="flex-1 max-w-lg"> 
             <div class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-6 rounded-lg shadow-lg ml-6 mb-10"> 

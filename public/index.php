@@ -23,6 +23,7 @@ $coursObj = new Cours($db);
 
 $user = new Admin($db);
 $isLoggedIn = $user->isLoggedIn();
+$userRole = $_SESSION['user']['role'] ?? ''; 
 
 
 ?>
@@ -36,23 +37,28 @@ $isLoggedIn = $user->isLoggedIn();
 </head>
 <body class="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white min-h-screen flex flex-col">
 
+    <!-- Navbar -->
     <nav class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
             <a href="#" class="text-white text-2xl font-bold tracking-wide">
                 Youdemy-Platform
             </a>
-
             <div class="flex items-center space-x-6 text-white">
-                <a href="front_office/add_cours.php" class="hover:text-blue-400 transition duration-300">
-                    Add Course
-                </a>
-                <a href="front_office/my_courses.php" class="hover:text-blue-400 transition duration-300">
-                    My Courses
-                </a>
-                <a href="front_office/statistique.php" class="hover:text-blue-400 transition duration-300">
-                    Statistique
-                </a>
-                
+                <?php if ($isLoggedIn && $userRole == 'enseignant'): ?>
+                    <a href="front_office/add_cours.php" class="hover:text-blue-400 transition duration-300">
+                        Add Course
+                    </a>
+                    <a href="front_office/statistique.php" class="hover:text-blue-400 transition duration-300">
+                        Statistique
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($isLoggedIn && $userRole == 'etudiant'): ?>
+                    <a href="front_office/my_courses.php" class="hover:text-blue-400 transition duration-300">
+                        My Courses
+                    </a>
+                <?php endif; ?>
+
                 <?php if ($isLoggedIn): ?>
                     <div class="relative">
                         <button 

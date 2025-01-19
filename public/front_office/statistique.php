@@ -30,6 +30,7 @@ if (isset($_GET['id'])) {
 
 $user = new Admin($db);
 $isLoggedIn = $user->isLoggedIn();
+$userRole = $_SESSION['user']['role'] ?? ''; 
 ?>
 
 <!DOCTYPE html>
@@ -49,16 +50,20 @@ $isLoggedIn = $user->isLoggedIn();
                 Youdemy-Platform
             </a>
             <div class="flex items-center space-x-6 text-white">
-                <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">
-                    Add Course
-                </a>
-                <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">
-                    My Courses
-                </a>
-                <a href="statistique.php" class="hover:text-blue-400 transition duration-300">
-                    Statistique
-                </a>
-                
+                <?php if ($isLoggedIn && $userRole == 'enseignant'): ?>
+                    <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">
+                        Add Course
+                    </a>
+                    <a href="statistique.php" class="hover:text-blue-400 transition duration-300">
+                        Statistique
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($isLoggedIn && $userRole == 'etudiant'): ?>
+                    <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">
+                        My Courses
+                    </a>
+                <?php endif; ?>
                 <?php if ($isLoggedIn): ?>
                     <div class="relative">
                         <button 
@@ -93,6 +98,7 @@ $isLoggedIn = $user->isLoggedIn();
                         Login
                     </a>
                 <?php endif; ?>
+
             </div>
         </div>
     </nav>
