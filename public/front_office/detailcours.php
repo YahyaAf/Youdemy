@@ -5,6 +5,7 @@ use config\Database;
 use Src\courses\Cours;
 use Src\categories\Category;
 use Src\tags\Tag;
+use Src\users\Admin;
 
 session_start();
 
@@ -26,6 +27,9 @@ if (isset($_GET['id'])) {
     echo "Invalid course ID.";
     exit;
 }
+
+$user = new Admin($db);
+$isLoggedIn = $user->isLoggedIn();
 ?>
 
 <!DOCTYPE html>
@@ -44,23 +48,48 @@ if (isset($_GET['id'])) {
             <a href="../index.php" class="text-white text-2xl font-bold tracking-wide">
                 Youdemy-Platform
             </a>
-            <div class="flex items-center space-x-6">
-                <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">Add Course</a>
-                <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">My Courses</a>
-                <a href="signup.php" class="hover:text-blue-400 transition duration-300">Sign Up</a>
-                <a href="login.php" class="hover:text-blue-400 transition duration-300">Login</a>
-                <div class="relative">
-                    <button 
-                        id="userMenuButton" 
-                        class="bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg transition duration-300"
-                    >
-                        User
-                    </button>
-                    <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg hidden">
-                        <a href="pages/account.php" class="block px-4 py-2 hover:bg-gray-700">Account</a>
-                        <a href="../../src/users/logoutHandler.php" class="block px-4 py-2 hover:bg-gray-700">Logout</a>
+            <div class="flex items-center space-x-6 text-white">
+                <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">
+                    Add Course
+                </a>
+                <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">
+                    My Courses
+                </a>
+                
+                <?php if ($isLoggedIn): ?>
+                    <div class="relative">
+                        <button 
+                            id="userMenuButton"
+                            class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg shadow transition duration-300"
+                        >
+                            <span>User</span>
+                        </button>
+                        <div 
+                            id="userMenu"
+                            class="absolute right-0 mt-2 w-48 bg-gray-800 text-white rounded-lg shadow-lg hidden"
+                        >
+                            <a 
+                                href="pages/account.php" 
+                                class="block px-4 py-2 hover:bg-gray-700 rounded-t-lg transition duration-300"
+                            >
+                                Account
+                            </a>
+                            <a 
+                                href="../../src/users/logoutHandler.php" 
+                                class="block px-4 py-2 hover:bg-gray-700 rounded-b-lg transition duration-300"
+                            >
+                                Logout
+                            </a>
+                        </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <a href="signup.php" class="hover:text-blue-400 transition duration-300">
+                        Sign Up
+                    </a>
+                    <a href="login.php" class="hover:text-blue-400 transition duration-300">
+                        Login
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>

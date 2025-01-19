@@ -4,6 +4,7 @@ use config\Database;
 use Src\categories\Category;
 use Src\tags\Tag;
 use Src\courses\Cours;
+use Src\users\Admin;
 
 session_start();
 
@@ -19,6 +20,9 @@ $tag = new Tag($db);
 $tags = $tag->read();
 
 $coursObj = new Cours($db);
+
+$user = new Admin($db);
+$isLoggedIn = $user->isLoggedIn();
 
 
 ?>
@@ -49,38 +53,43 @@ $coursObj = new Cours($db);
                 <a href="front_office/my_courses.php" class="hover:text-blue-400 transition duration-300">
                     My Courses
                 </a>
-                <a href="front_office/signup.php" class="hover:text-blue-400 transition duration-300">
-                    Sign Up
-                </a>
-                <a href="front_office/login.php" class="hover:text-blue-400 transition duration-300">
-                    Login
-                </a>
-                <!-- Dropdown Menu -->
-                <div class="relative">
-                    <button 
-                        id="userMenuButton"
-                        class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg shadow transition duration-300"
-                    >
-                        <span>User</span>
-                    </button>
-                    <div 
-                        id="userMenu"
-                        class="absolute right-0 mt-2 w-48 bg-gray-800 text-white rounded-lg shadow-lg hidden"
-                    >
-                        <a 
-                            href="pages/account.php" 
-                            class="block px-4 py-2 hover:bg-gray-700 rounded-t-lg transition duration-300"
+                
+                <?php if ($isLoggedIn): ?>
+                    <!-- Dropdown Menu for Logged In User -->
+                    <div class="relative">
+                        <button 
+                            id="userMenuButton"
+                            class="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg shadow transition duration-300"
                         >
-                            Account
-                        </a>
-                        <a 
-                            href="../src/users/logoutHandler.php" 
-                            class="block px-4 py-2 hover:bg-gray-700 rounded-b-lg transition duration-300"
+                            <span>User</span>
+                        </button>
+                        <div 
+                            id="userMenu"
+                            class="absolute right-0 mt-2 w-48 bg-gray-800 text-white rounded-lg shadow-lg hidden"
                         >
-                            Logout
-                        </a>
+                            <a 
+                                href="pages/account.php" 
+                                class="block px-4 py-2 hover:bg-gray-700 rounded-t-lg transition duration-300"
+                            >
+                                Account
+                            </a>
+                            <a 
+                                href="../src/users/logoutHandler.php" 
+                                class="block px-4 py-2 hover:bg-gray-700 rounded-b-lg transition duration-300"
+                            >
+                                Logout
+                            </a>
+                        </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <!-- Login and Sign Up for Not Logged In User -->
+                    <a href="front_office/signup.php" class="hover:text-blue-400 transition duration-300">
+                        Sign Up
+                    </a>
+                    <a href="front_office/login.php" class="hover:text-blue-400 transition duration-300">
+                        Login
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
