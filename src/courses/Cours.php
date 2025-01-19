@@ -120,6 +120,39 @@ class Cours {
             return [];
         }
     }
+
+    public function readAll_by_documentID($id) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags,
+                    DATE(c.scheduled_date) AS scheduled_date_only
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                WHERE (c.contenu_document IS NOT NULL AND c.contenu_document != '') 
+                  AND (c.contenu_video IS NULL OR c.contenu_video = '') 
+                  AND c.enseignant_id = :id
+                GROUP BY c.id
+                ORDER BY c.created_at DESC
+            ");
+    
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    
+            $stmt->execute();
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        } catch (PDOException $e) {
+            error_log("Error fetching document-based courses: " . $e->getMessage());
+            return [];
+        }
+    }
+    
     
     
     
@@ -138,6 +171,33 @@ class Cours {
                 LEFT JOIN tags t ON ct.tag_id = t.id
                 WHERE (c.contenu_video IS NOT NULL AND c.contenu_video != '') 
                   AND (c.contenu_document IS NULL OR c.contenu_document = '')
+                GROUP BY c.id
+                ORDER BY c.created_at DESC
+            ");
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching video-based courses: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function readAll_by_videoID($type,$id) {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags,
+                    DATE(c.scheduled_date) AS scheduled_date_only
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                WHERE (c.contenu_video IS NOT NULL AND c.contenu_video != '') 
+                  AND (c.contenu_document IS NULL OR c.contenu_document = '')
+                  AND c.enseignant_id= $id
                 GROUP BY c.id
                 ORDER BY c.created_at DESC
             ");

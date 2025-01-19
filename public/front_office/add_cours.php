@@ -22,6 +22,7 @@
     $user = new Admin($db);
     $isLoggedIn = $user->isLoggedIn();
     $userRole = $_SESSION['user']['role'] ?? ''; 
+    $userId = $_SESSION['user']['id'] ?? ''; 
     
 ?>
 
@@ -231,7 +232,7 @@
                     </thead>
                     <tbody>
                         <?php 
-                        $documentCourses = $coursObj->readAll();
+                        $documentCourses = $coursObj->readAll_by_documentID($userId);
                         foreach ($documentCourses as $course): ?>
                             <tr class="border-t border-gray-700">
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['title']); ?></td>
@@ -276,7 +277,7 @@
                     </thead>
                     <tbody>
                         <?php 
-                        $videoCourses = $coursObj->readAll("video");
+                        $videoCourses = $coursObj->readAll_by_videoID("video",$userId);
                         foreach ($videoCourses as $course): ?>
                             <tr class="border-t border-gray-700">
                                 <td class="px-4 py-2"><?php echo htmlspecialchars($course['title']); ?></td>

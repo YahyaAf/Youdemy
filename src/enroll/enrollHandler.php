@@ -12,7 +12,6 @@ if (!isset($_SESSION['user']['id'])) {
 
 $userId = $_SESSION['user']['id'];
 
-// Check for the course ID from GET request
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $courseId = (int)$_GET['id'];
 } else {
@@ -30,7 +29,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $response = $enroll->addEnrollment($userId, $courseId);
 }
 
-// Output the response and redirect
 echo $response;
 header("Location: ../../public/front_office/my_courses.php?id=$courseId");
 exit;
