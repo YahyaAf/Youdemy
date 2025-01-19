@@ -56,3 +56,12 @@ CREATE TABLE cours_tags (
     CONSTRAINT fk_article_tags_tag FOREIGN KEY (tag_id) 
         REFERENCES tags (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE enroll (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, 
+    user_id BIGINT NOT NULL,             
+    cours_id BIGINT UNSIGNED NOT NULL,  
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (cours_id) REFERENCES cours(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

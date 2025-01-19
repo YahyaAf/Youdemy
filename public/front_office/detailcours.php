@@ -134,7 +134,7 @@ if (isset($_GET['id'])) {
                         Go Back
                     </a>
                     <a
-                        href="add_course.php"
+                        href="../../src/enroll/enrollHandler.php?id=<?php echo htmlspecialchars($course['id']); ?>"
                         class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow-md font-semibold transition-all duration-300"
                     >
                         Add Course
