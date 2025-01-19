@@ -147,7 +147,7 @@ $coursObj = new Cours($db);
                         <p class="text-gray-200 mb-6">
                             <?php echo htmlspecialchars($course['contenu_document']); ?>
                         </p>
-                        <a href="#" 
+                        <a href="./front_office/detailcours.php?id=<?php echo $course['id']; ?>" 
                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
                             View Course
                         </a>
@@ -179,7 +179,7 @@ $coursObj = new Cours($db);
                             frameborder="0" 
                             allowfullscreen>
                         </iframe>
-                        <a href="#" 
+                        <a href="./front_office/detailcours.php?id=<?php echo $course['id']; ?>" 
                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
                             View Course
                         </a>

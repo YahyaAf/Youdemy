@@ -26,7 +26,7 @@ class Cours {
                 'contenu' => 'document',
                 'featured_image' => $data['featured_image'],
                 'category_id' => $data['category_id'],
-                'enseignant_id' => $data['enseignant_id'],
+                'enseignant_id' => $_SESSION['user']['id'],
                 'scheduled_date' => $data['scheduled_date'],
                 'contenu_document' => $data['contenu_document'],
             ]);
@@ -57,7 +57,7 @@ class Cours {
                 'contenu' => $type,
                 'featured_image' => $data['featured_image'],
                 'category_id' => $data['category_id'],
-                'enseignant_id' => $data['enseignant_id'],
+                'enseignant_id' => $_SESSION['user']['id'],
                 'scheduled_date' => $data['scheduled_date'],
                 'contenu_video' => $data['contenu_video'],
             ]);
