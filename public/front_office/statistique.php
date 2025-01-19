@@ -101,78 +101,7 @@ $isLoggedIn = $user->isLoggedIn();
     <div class="container mx-auto mt-10 px-6 md:px-0">
         <div class="bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-lg shadow-xl p-8 text-white flex flex-col lg:flex-row gap-8">
             
-            <!-- Image Section -->
-            <div class="lg:w-1/3 flex justify-center">
-                <img 
-                    src="<?php echo htmlspecialchars($course['featured_image'] ?? 'default-image.jpg'); ?>" 
-                    alt="Course Image" 
-                    class="rounded-lg shadow-lg w-full max-w-sm object-cover"
-                >
-            </div>
-
-            <div class="lg:w-2/3 flex flex-col gap-6">
-                <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                    <?php echo htmlspecialchars($course['title']); ?>
-                </h1>
-
-                <p class="text-sm text-gray-400">
-                    <span class="font-semibold text-gray-300">Published on:</span> 
-                    <?php echo htmlspecialchars($course['scheduled_date_only']); ?>
-                </p>
-
-                <p class="text-lg text-gray-300 leading-relaxed">
-                    <?php echo htmlspecialchars($course['description']); ?>
-                </p>
-
-                <p class="text-lg text-gray-300 leading-relaxed ">
-                    <?php echo nl2br(htmlspecialchars($course['contenu_document'])); ?>
-                </p>
-
-                <div>
-                    <span class="font-semibold text-gray-300">Category:</span> 
-                    <span class="text-gray-400"><?php echo htmlspecialchars($course['category_name']); ?></span>
-                </div>
-
-                <div>
-                    <span class="font-semibold text-gray-300">Tags:</span>
-                    <div class="mt-2 flex flex-wrap gap-2">
-                        <?php 
-                            if (!empty($course['tags'])) {
-                                $tags = explode(',', $course['tags']);
-                                foreach ($tags as $tag) {
-                                    echo "<span class='bg-blue-500 text-white rounded-full px-3 py-1 text-sm'>" . htmlspecialchars($tag) . "</span>";
-                                }
-                            } else {
-                                echo "<span class='text-gray-400'>No tags available.</span>";
-                            }
-                        ?>
-                    </div>
-                </div>
-
-                <?php if($course['contenu'] === "video"): ?>
-                    <iframe 
-                        src="<?php echo htmlspecialchars($course['contenu_video']); ?>" 
-                        class="w-full h-64 rounded-md border-2 border-gray-700 shadow-lg"
-                        frameborder="0" 
-                        allowfullscreen>
-                    </iframe>
-                <?php endif; ?>
-
-                <div class="mt-6 flex gap-4">
-                    <a
-                        href="../index.php"
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md font-semibold transition-all duration-300"
-                    >
-                        Go Back
-                    </a>
-                    <a
-                        href="../../src/enroll/enrollHandler.php?id=<?php echo htmlspecialchars($course['id']); ?>"
-                        class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow-md font-semibold transition-all duration-300"
-                    >
-                        Add Course
-                    </a>
-                </div>
-            </div>
+            
         </div>
     </div>
     <!-- Footer -->

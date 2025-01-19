@@ -50,6 +50,9 @@
                 <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">
                     My Courses
                 </a>
+                <a href="statistique.php" class="hover:text-blue-400 transition duration-300">
+                    Statistique
+                </a>
                 
                 <?php if ($isLoggedIn): ?>
                     <div class="relative">
