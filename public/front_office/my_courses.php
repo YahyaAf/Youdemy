@@ -1,0 +1,94 @@
+<?php
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+use config\Database;
+use Src\enroll\Enroll;
+
+session_start();
+$userId = $_SESSION['user']['id'];
+
+$database = new Database("youdemy");
+$db = $database->getConnection();
+
+$enroll = new Enroll($db);
+
+$enrollments = $enroll->readAll($userId);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="../index.php" class="text-white text-2xl font-bold tracking-wide">
+                Youdemy-Platform
+            </a>
+            <div class="flex items-center space-x-6">
+                <a href="add_cours.php" class="hover:text-blue-400 transition duration-300">Add Course</a>
+                <a href="my_courses.php" class="hover:text-blue-400 transition duration-300">My Courses</a>
+                <a href="signup.php" class="hover:text-blue-400 transition duration-300">Sign Up</a>
+                <a href="login.php" class="hover:text-blue-400 transition duration-300">Login</a>
+                <div class="relative">
+                    <button 
+                        id="userMenuButton" 
+                        class="bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg transition duration-300"
+                    >
+                        User
+                    </button>
+                    <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg hidden">
+                        <a href="pages/account.php" class="block px-4 py-2 hover:bg-gray-700">Account</a>
+                        <a href="../../src/users/logoutHandler.php" class="block px-4 py-2 hover:bg-gray-700">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- My Courses Section -->
+    <div class="container mx-auto mt-10 px-6 md:px-0">
+        <h2 class="text-3xl font-semibold text-center mb-8">My Enrolled Courses</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <?php foreach ($enrollments as $enrollment): ?>
+                <div class="bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-lg shadow-xl p-6">
+                    <img src="<?= htmlspecialchars($enrollment['course_featured_image']) ?>" alt="Course Image" class="w-full h-48 object-cover rounded-t-lg">
+                    <h3 class="text-xl font-bold mt-4"><?= htmlspecialchars($enrollment['course_title']) ?></h3>
+                    <p class="mt-2 text-sm text-gray-400"><?= htmlspecialchars($enrollment['course_description']) ?></p>
+                    <div class="flex justify-between items-center mt-4">
+                        <a href="course_details.php?id=<?= $enrollment['cours_id'] ?>" class="text-blue-400 hover:text-blue-500 transition duration-300">View Details</a>
+                        <a href="delete_enrollment.php?user_id=<?= $enrollment['user_id'] ?>&course_id=<?= $enrollment['cours_id'] ?>" class="text-red-400 hover:text-red-500 transition duration-300">Delete</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-6 mt-auto text-center">
+        <p>&copy; 2025 Youdemy-Platform. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const userMenuButton = document.getElementById('userMenuButton');
+        const userMenu = document.getElementById('userMenu');
+
+        userMenuButton.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -13,7 +13,6 @@ class Enroll {
         $this->pdo = $pdo;
     }
 
-
     public function addEnrollment($userId, $courseId) {
         try {
             $sql = "INSERT INTO enroll (user_id, cours_id) 
@@ -46,5 +45,39 @@ class Enroll {
             return "Error deleting enrollment: " . $e->getMessage();
         }
     }
+
+    public function readAll($id) {
+        try {
+            $sql = "
+                SELECT 
+                    e.id AS enrollment_id, 
+                    e.user_id, 
+                    e.cours_id, 
+                    e.created_at AS enrollment_created_at,
+                    c.title AS course_title,
+                    c.description AS course_description,
+                    c.scheduled_date AS course_scheduled_date,
+                    c.featured_image AS course_featured_image,
+                    cat.name AS category_name
+                FROM enroll e
+                JOIN cours c ON e.cours_id = c.id
+                JOIN categories cat ON c.category_id = cat.id
+                WHERE e.user_id = :user_id
+                ORDER BY e.created_at DESC
+            ";
+    
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':user_id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $enrollments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $enrollments;
+    
+        } catch (PDOException $e) {
+            return "Error fetching enrollments: " . $e->getMessage();
+        }
+    }
+    
 }
 ?>
