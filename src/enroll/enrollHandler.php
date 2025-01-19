@@ -12,6 +12,7 @@ if (!isset($_SESSION['user']['id'])) {
 
 $userId = $_SESSION['user']['id'];
 
+// Check for the course ID from GET request
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $courseId = (int)$_GET['id'];
 } else {
@@ -23,10 +24,14 @@ $db = $database->getConnection();
 
 $enroll = new Enroll($db);
 
-$response = $enroll->addEnrollment($userId, $courseId);
+if (isset($_GET['action']) && $_GET['action'] === 'delete') {
+    $response = $enroll->deleteEnrollment($userId, $courseId);
+} else {
+    $response = $enroll->addEnrollment($userId, $courseId);
+}
 
+// Output the response and redirect
 echo $response;
-
-header("Location: ../../public/front_office/detailcours.php?id=$courseId");
+header("Location: ../../public/front_office/my_courses.php?id=$courseId");
 exit;
 ?>

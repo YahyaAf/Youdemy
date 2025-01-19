@@ -63,8 +63,8 @@ $enrollments = $enroll->readAll($userId);
                     <h3 class="text-xl font-bold mt-4"><?= htmlspecialchars($enrollment['course_title']) ?></h3>
                     <p class="mt-2 text-sm text-gray-400"><?= htmlspecialchars($enrollment['course_description']) ?></p>
                     <div class="flex justify-between items-center mt-4">
-                        <a href="course_details.php?id=<?= $enrollment['cours_id'] ?>" class="text-blue-400 hover:text-blue-500 transition duration-300">View Details</a>
-                        <a href="delete_enrollment.php?user_id=<?= $enrollment['user_id'] ?>&course_id=<?= $enrollment['cours_id'] ?>" class="text-red-400 hover:text-red-500 transition duration-300">Delete</a>
+                        <a href="./detailcours.php?id=<?= $enrollment['cours_id'] ?>" class="text-blue-400 hover:text-blue-500 transition duration-300">View Details</a>
+                        <a href="../../src/enroll/enrollHandler.php?id=<?= $enrollment['cours_id'] ?>&action=delete" class="text-red-400 hover:text-red-500 transition duration-300">Delete</a>
                     </div>
                 </div>
             <?php endforeach; ?>
