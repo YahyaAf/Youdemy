@@ -24,6 +24,10 @@
           echo "Failed to update profile.";
       }
   }
+  if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+    header('Location: ../front_office/erreur404.php');
+    exit();
+  }
 
   
 ?>

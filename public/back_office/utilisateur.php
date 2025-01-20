@@ -6,6 +6,11 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use config\Database;
 use Src\users\Admin;
 
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+  header('Location: ../front_office/erreur404.php');
+  exit();
+}
+
 $database = new Database("youdemy");
 $db = $database->getConnection();
 

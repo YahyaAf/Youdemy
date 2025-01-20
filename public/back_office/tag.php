@@ -10,6 +10,11 @@
     $tag = new Tag($db);
 
     $tags = $tag->read();
+
+    if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+      header('Location: ../front_office/erreur404.php');
+      exit();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">

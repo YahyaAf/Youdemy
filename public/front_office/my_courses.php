@@ -8,6 +8,11 @@ use Src\users\Admin;
 session_start();
 $userId = $_SESSION['user']['id'];
 
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'etudiant') {
+    header('Location: erreur404.php');
+    exit();
+}
+
 $database = new Database("youdemy");
 $db = $database->getConnection();
 

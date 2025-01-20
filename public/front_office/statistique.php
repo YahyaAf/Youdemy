@@ -8,6 +8,10 @@ use Src\tags\Tag;
 use Src\users\Admin;
 
 session_start();
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'enseignant') {
+    header('Location: erreur404.php');
+    exit();
+}
 
 $database = new Database("youdemy");
 $db = $database->getConnection();
