@@ -145,6 +145,7 @@ $userRole = $_SESSION['user']['role'] ?? '';
             <?php 
             $documentCourses = $coursObj->readAll();
             foreach ($documentCourses as $course): ?>
+                <?php if($course['status'] === 'published') : ?>
                 <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
                     <img src="<?php echo htmlspecialchars($course['featured_image']); ?>" 
                         alt="Course Image" 
@@ -165,6 +166,7 @@ $userRole = $_SESSION['user']['role'] ?? '';
                         </a>
                     </div>
                 </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
         <h3 class="text-3xl font-semibold text-white mt-12 mb-6">
@@ -174,6 +176,7 @@ $userRole = $_SESSION['user']['role'] ?? '';
             <?php 
             $videoCourses = $coursObj->readAll("video"); 
             foreach ($videoCourses as $course): ?>
+                <?php if($course['status'] === 'published') : ?>
                 <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
                     <img src="<?php echo htmlspecialchars($course['featured_image']); ?>" 
                         alt="Course Image" 
@@ -197,6 +200,7 @@ $userRole = $_SESSION['user']['role'] ?? '';
                         </a>
                     </div>
                 </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>
