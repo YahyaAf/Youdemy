@@ -121,6 +121,30 @@ class Cours {
         }
     }
 
+    public function affichage() {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags,
+                    DATE(c.scheduled_date) AS scheduled_date_only
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                GROUP BY c.id
+                ORDER BY c.created_at DESC
+            ");
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching document-based courses: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function readAll_by_documentID($id) {
         try {
             $stmt = $this->pdo->prepare("
@@ -435,37 +459,31 @@ class Cours {
         }
     }
     
-    
-    
-    
-    
-    
+    public function search($query) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                WHERE c.title LIKE :query
+                   OR c.contenu LIKE :query
+                   OR t.name LIKE :query
+                GROUP BY c.id
+            ");
+            $stmt->execute(['query' => '%' . $query . '%']);
+            $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // public function search($query) {
-    //     try {
-    //         $stmt = $this->pdo->prepare("
-    //             SELECT 
-    //                 c.*, 
-    //                 ca.name AS category_name, 
-    //                 u.username AS enseignant_name, 
-    //                 GROUP_CONCAT(t.name) AS tags
-    //             FROM cours c
-    //             LEFT JOIN categories ca ON c.category_id = ca.id
-    //             LEFT JOIN users u ON c.enseignant_id = u.id
-    //             LEFT JOIN cours_tags ct ON c.id = ct.cours_id
-    //             LEFT JOIN tags t ON ct.tag_id = t.id
-    //             WHERE c.title LIKE :query
-    //                OR c.content LIKE :query
-    //                OR t.name LIKE :query
-    //             GROUP BY c.id
-    //         ");
-    //         $stmt->execute(['query' => '%' . $query . '%']);
-    //         $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    //         return $courses ?: [];
-    //     } catch (PDOException $e) {
-    //         error_log("Error searching courses: " . $e->getMessage());
-    //         return [];
-    //     }
-    // }
+            return $courses ?: [];
+        } catch (PDOException $e) {
+            error_log("Error searching courses: " . $e->getMessage());
+            return [];
+        }
+    }
 }

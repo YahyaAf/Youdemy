@@ -25,6 +25,12 @@ $user = new Admin($db);
 $isLoggedIn = $user->isLoggedIn();
 $userRole = $_SESSION['user']['role'] ?? ''; 
 
+$courses = $coursObj->affichage();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['search'])) {
+    $searchQuery = htmlspecialchars(trim($_POST['search'])); 
+    $courses = $coursObj->search($searchQuery);
+}
 
 ?>
 <!DOCTYPE html>
@@ -121,7 +127,7 @@ $userRole = $_SESSION['user']['role'] ?? '';
             <input 
               type="text" 
               name="search" 
-              placeholder="Search for articles..." 
+              placeholder="Search for courses..." 
               class="py-3 px-4 rounded-lg shadow-md text-gray-900 text-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500" 
             />
             <button 
@@ -138,13 +144,8 @@ $userRole = $_SESSION['user']['role'] ?? '';
         <h2 class="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-10">
             Featured Courses
         </h2>
-        <h3 class="text-3xl font-semibold text-white mb-6">
-            📄 Document Courses
-        </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <?php 
-            $documentCourses = $coursObj->readAll();
-            foreach ($documentCourses as $course): ?>
+            <?php foreach ($courses as $course): ?>
                 <?php if($course['status'] === 'published') : ?>
                 <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
                     <img src="<?php echo htmlspecialchars($course['featured_image']); ?>" 
@@ -157,43 +158,18 @@ $userRole = $_SESSION['user']['role'] ?? '';
                         <p class="text-sm text-gray-400 mb-4">
                             <?php echo htmlspecialchars($course['description']); ?>
                         </p>
-                        <p class="text-gray-200 mb-6">
-                            <?php echo htmlspecialchars($course['contenu_document']); ?>
-                        </p>
-                        <a href="./front_office/detailcours.php?id=<?php echo $course['id']; ?>" 
-                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
-                            View Course
-                        </a>
-                    </div>
-                </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
-        <h3 class="text-3xl font-semibold text-white mt-12 mb-6">
-            🎥 Video Courses
-        </h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <?php 
-            $videoCourses = $coursObj->readAll("video"); 
-            foreach ($videoCourses as $course): ?>
-                <?php if($course['status'] === 'published') : ?>
-                <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                    <img src="<?php echo htmlspecialchars($course['featured_image']); ?>" 
-                        alt="Course Image" 
-                        class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold text-blue-400 mb-2">
-                            <?php echo htmlspecialchars($course['title']); ?>
-                        </h4>
-                        <p class="text-sm text-gray-400 mb-4">
-                            <?php echo htmlspecialchars($course['description']); ?>
-                        </p>
-                        <iframe 
-                            src="<?php echo htmlspecialchars($course['contenu_video']); ?>" 
-                            class="w-full h-48 mb-4 rounded-md"
-                            frameborder="0" 
-                            allowfullscreen>
-                        </iframe>
+                        <?php if($course['contenu'] === 'document') : ?>
+                            <p class="text-gray-200 mb-6">
+                                <?php echo htmlspecialchars($course['contenu_document']); ?>
+                            </p>
+                        <?php else : ?>
+                            <iframe 
+                                src="<?php echo htmlspecialchars($course['contenu_video']); ?>" 
+                                class="w-full h-48 mb-4 rounded-md"
+                                frameborder="0" 
+                                allowfullscreen>
+                            </iframe>
+                        <?php endif; ?>
                         <a href="./front_office/detailcours.php?id=<?php echo $course['id']; ?>" 
                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
                             View Course
