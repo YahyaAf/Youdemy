@@ -12,6 +12,11 @@
         exit();
     }
 
+    elseif (!isset($_SESSION['user']) || $_SESSION['user']['activation'] === 'pending') {
+        header('Location: pending.php');
+        exit();
+    }
+
     $database = new Database("youdemy");
     $db = $database->getConnection();
 

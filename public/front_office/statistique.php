@@ -11,6 +11,9 @@ session_start();
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'enseignant') {
     header('Location: erreur404.php');
     exit();
+}elseif (!isset($_SESSION['user']) || $_SESSION['user']['activation'] === 'pending') {
+    header('Location: pending.php');
+    exit();
 }
 
 $database = new Database("youdemy");
