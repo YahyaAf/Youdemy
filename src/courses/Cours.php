@@ -356,6 +356,49 @@ class Cours {
             return [];
         }
     }
+
+    public function getCoursesWithMostStudents() {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT 
+                    c.title, 
+                    COUNT(e.user_id) AS student_count
+                FROM cours c
+                LEFT JOIN enroll e ON c.id = e.cours_id
+                GROUP BY c.id
+                ORDER BY student_count DESC
+                LIMIT 3
+            ");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        } catch (PDOException $e) {
+            error_log("Error fetching courses with most students: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getTopEnseignant() {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT 
+                    u.id AS teacher_id,
+                    u.username AS teacher_name,
+                    COUNT(e.user_id) AS student_count
+                FROM users u
+                LEFT JOIN cours c ON u.id = c.enseignant_id
+                LEFT JOIN enroll e ON c.id = e.cours_id
+                GROUP BY u.id
+                ORDER BY student_count DESC
+                LIMIT 3
+            ");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        } catch (PDOException $e) {
+            error_log("Error fetching top teachers: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    
+    
     
 
     // public function search($query) {
