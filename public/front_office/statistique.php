@@ -14,6 +14,9 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'enseignant') {
 }elseif (!isset($_SESSION['user']) || $_SESSION['user']['activation'] === 'pending') {
     header('Location: pending.php');
     exit();
+}elseif (!isset($_SESSION['user']) || $_SESSION['user']['activation'] === 'baned') {
+    header('Location: banned.php');
+    exit();
 }
 
 $database = new Database("youdemy");

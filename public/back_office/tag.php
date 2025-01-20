@@ -14,6 +14,9 @@
     if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
       header('Location: ../front_office/erreur404.php');
       exit();
+    }elseif (!isset($_SESSION['user']) || $_SESSION['user']['activation'] === 'baned') {
+      header('Location: ../front_office/banned.php');
+      exit();
     }
 ?>
 <!DOCTYPE html>

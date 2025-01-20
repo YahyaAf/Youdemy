@@ -9,6 +9,11 @@ use Src\users\Admin;
 
 session_start();
 
+if (!isset($_SESSION['user']) || $_SESSION['user']['activation'] === 'baned') {
+    header('Location: banned.php');
+    exit();
+}
+
 $database = new Database("youdemy");
 $db = $database->getConnection();
 
@@ -175,7 +180,7 @@ $userRole = $_SESSION['user']['role'] ?? '';
                         href="../../src/enroll/enrollHandler.php?id=<?php echo htmlspecialchars($course['id']); ?>"
                         class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow-md font-semibold transition-all duration-300"
                     >
-                        Add Course
+                        Inscrire
                     </a>
                     <?php endif; ?>
                 </div>
