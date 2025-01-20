@@ -78,6 +78,21 @@ class Enroll {
             return "Error fetching enrollments: " . $e->getMessage();
         }
     }
+
+    public function isAlreadyEnrolled($userId, $courseId) {
+        try {
+            $sql = "SELECT COUNT(*) FROM enroll WHERE user_id = :user_id AND cours_id = :cours_id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':cours_id', $courseId, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $enrollmentCount = $stmt->fetchColumn();
+            return $enrollmentCount > 0; 
+        } catch (PDOException $e) {
+            throw new Exception("Error checking enrollment: " . $e->getMessage());
+        }
+    }
     
 }
 ?>

@@ -6,6 +6,7 @@ use Src\courses\Cours;
 use Src\categories\Category;
 use Src\tags\Tag;
 use Src\users\Admin;
+use Src\enroll\Enroll;
 
 session_start();
 
@@ -34,6 +35,11 @@ if (isset($_GET['id'])) {
     echo "Invalid course ID.";
     exit;
 }
+$coursId = $_GET['id'];
+$userId = $_SESSION['user']['id'];
+$enrollmentObj = new Enroll($db);
+
+
 
 $user = new Admin($db);
 $isLoggedIn = $user->isLoggedIn();
@@ -177,14 +183,21 @@ $userRole = $_SESSION['user']['role'] ?? '';
                     >
                         Go Back
                     </a>
-                    <?php if($userRole === "etudiant"): ?>
-                    <a
-                        href="../../src/enroll/enrollHandler.php?id=<?php echo htmlspecialchars($course['id']); ?>"
-                        class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow-md font-semibold transition-all duration-300"
-                    >
-                        Inscrire
-                    </a>
+                    <?php if ($userRole === "etudiant"): ?>
+                        <?php if (!$enrollmentObj->isAlreadyEnrolled($userId, $coursId)): ?>
+                            <a
+                                href="../../src/enroll/enrollHandler.php?id=<?php echo htmlspecialchars($coursId); ?>"
+                                class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow-md font-semibold transition-all duration-300"
+                            >
+                                Inscrire
+                            </a>
+                        <?php else: ?>
+                            <p class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg font-semibold shadow-md border border-yellow-300">
+                                Déjà inscrit
+                            </p>
+                        <?php endif; ?>
                     <?php endif; ?>
+
                 </div>
             </div>
         </div>
