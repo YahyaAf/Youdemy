@@ -7,6 +7,21 @@
     header('Location: ../front_office/banned.php');
     exit();
   }
+
+  require_once __DIR__ . '/../../vendor/autoload.php';
+
+    use config\Database;
+    use Src\courses\Cours;
+    use Src\categories\Category;
+    use Src\tags\Tag;
+    use Src\users\Admin;
+
+    $database = new Database("youdemy");
+    $db = $database->getConnection();
+
+    $cours = new Cours($db);
+    $coursCount = $cours->countCourses();
+    $categorieCountByCours = $cours->getCoursesByCategory();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -149,18 +164,9 @@
           <div class="col-lg-4">
             <div class="card card-chart">
               <div class="card-header">
-                <h5 class="card-category">Global Sales</h5>
-                <h4 class="card-title">Shipped Products</h4>
+                <h5 class="card-category">Global Cours</h5>
+                <h4 class="card-title">Total Of Courses : <span class="text-2xl font-semibold"><?php echo $coursCount; ?></span></h4>
                 <div class="dropdown">
-                  <button type="button" class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">
-                    <i class="now-ui-icons loader_gear"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                    <a class="dropdown-item text-danger" href="#">Remove Data</a>
-                  </div>
                 </div>
               </div>
               <div class="card-body">
@@ -170,7 +176,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                  <i class="now-ui-icons arrows-1_refresh-69"></i> Statistique
                 </div>
               </div>
             </div>
@@ -178,28 +184,22 @@
           <div class="col-lg-4 col-md-6">
             <div class="card card-chart">
               <div class="card-header">
-                <h5 class="card-category">2018 Sales</h5>
-                <h4 class="card-title">All products</h4>
+                <h5 class="card-category">Global Categorie</h5>
+                <h4 class="card-title">Total Categorie By Courses</h4>
                 <div class="dropdown">
-                  <button type="button" class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">
-                    <i class="now-ui-icons loader_gear"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                    <a class="dropdown-item text-danger" href="#">Remove Data</a>
-                  </div>
+                  
                 </div>
               </div>
               <div class="card-body">
-                <div class="chart-area">
-                  <canvas id="lineChartExampleWithNumbersAndGrid"></canvas>
+                <div class="card-category">
+                  <?php foreach($categorieCountByCours as $categories): ?>
+                      <p>- <?php echo $categories['category_name']; ?> : <?php echo $categories['course_count']; ?></p>
+                  <?php endforeach; ?>
                 </div>
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                  <i class="now-ui-icons arrows-1_refresh-69"></i> Statistique
                 </div>
               </div>
             </div>

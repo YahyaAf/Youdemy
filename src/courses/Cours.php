@@ -328,16 +328,35 @@ class Cours {
         return $stmt->execute();
     }
 
-    // public function countCourses() {
-    //     try {
-    //         $stmt = $this->pdo->query("SELECT COUNT(*) AS cours_count FROM cours");
-    //         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    //         return $result['cours_count'];
-    //     } catch (PDOException $e) {
-    //         error_log("Error counting courses: " . $e->getMessage());
-    //         return 0;
-    //     }
-    // }
+    public function countCourses() {
+        try {
+            $stmt = $this->pdo->query("SELECT COUNT(*) AS cours_count FROM cours");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['cours_count'];
+        } catch (PDOException $e) {
+            error_log("Error counting courses: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function getCoursesByCategory() {
+        try {
+            $stmt = $this->pdo->query("
+                SELECT 
+                    ca.name AS category_name, 
+                    COUNT(c.id) AS course_count
+                FROM categories ca
+                LEFT JOIN cours c ON ca.id = c.category_id
+                GROUP BY ca.id
+                ORDER BY course_count DESC
+            ");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching courses by category: " . $e->getMessage());
+            return [];
+        }
+    }
+    
 
     // public function search($query) {
     //     try {

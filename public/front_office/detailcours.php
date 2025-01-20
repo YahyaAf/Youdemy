@@ -9,9 +9,11 @@ use Src\users\Admin;
 
 session_start();
 
-if (!isset($_SESSION['user']) || $_SESSION['user']['activation'] === 'baned') {
-    header('Location: banned.php');
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
     exit();
+}elseif($_SESSION['user']['activation'] === 'baned'){
+    header('Location: banned.php');
 }
 
 $database = new Database("youdemy");
