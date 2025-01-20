@@ -21,22 +21,12 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'enseignant') {
 
 $database = new Database("youdemy");
 $db = $database->getConnection();
+$userId = $_SESSION['user']['id'] ?? ''; 
 
 $coursObj = new Cours($db);
+$etudiantInscrire = $coursObj->etudiantInscrit($userId);
+$countCours = $coursObj->coursByEnseignant($userId);
 
-if (isset($_GET['id'])) {
-    $coursId = $_GET['id'];
-
-    $course = $coursObj->read($coursId);
-
-    if ($course === null) {
-        echo "Course not found.";
-        exit;
-    }
-} else {
-    echo "Invalid course ID.";
-    exit;
-}
 
 $user = new Admin($db);
 $isLoggedIn = $user->isLoggedIn();
@@ -108,18 +98,47 @@ $userRole = $_SESSION['user']['role'] ?? '';
                         Login
                     </a>
                 <?php endif; ?>
-
             </div>
         </div>
     </nav>
 
     <!-- Course Details -->
     <div class="container mx-auto mt-10 px-6 md:px-0">
-        <div class="bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-lg shadow-xl p-8 text-white flex flex-col lg:flex-row gap-8">
-            
-            
+        <h1 class="text-3xl font-bold text-center mb-6">Statistiques des Enseignants</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-gray-800 rounded-lg shadow-lg p-6 flex items-center space-x-4">
+                <div class="bg-blue-500 p-4 rounded-full">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a4 4 0 10-8 0v2m6 8H7m10 0a2 2 0 11-4 0 2 2 0 014 0zm-4-6h.01"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold">Étudiants Inscrits</h2>
+                    <?php if (!empty($etudiantInscrire)) : ?>
+                        <p class="text-gray-300"><?php echo htmlspecialchars($etudiantInscrire['teacher_name']); ?> : <?php echo htmlspecialchars($etudiantInscrire['student_count']); ?></p>
+                    <?php else : ?>
+                        <p class="text-gray-500">No data found for this teacher.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow-lg p-6 flex items-center space-x-4">
+                <div class="bg-green-500 p-4 rounded-full">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16m-7 4h7m-7 4h7M4 14h7m0 4h7"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold">Cours Créés</h2>
+                    <?php if (!empty($countCours)) : ?>
+                        <p class="text-gray-300">Total : <?php echo htmlspecialchars($countCours); ?></p>
+                    <?php else : ?>
+                        <p class="text-gray-500">No data found for this teacher.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
     </div>
+
     <!-- Footer -->
     <footer class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-6 mt-auto text-center">
         <p>&copy; 2025 Youdemy-Platform. All Rights Reserved.</p>

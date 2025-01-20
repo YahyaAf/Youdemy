@@ -396,6 +396,46 @@ class Cours {
             return [];
         }
     }
+
+    public function etudiantInscrit($id) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    u.username AS teacher_name,
+                    COUNT(e.user_id) AS student_count
+                FROM users u
+                LEFT JOIN cours c ON u.id = c.enseignant_id
+                LEFT JOIN enroll e ON c.id = e.cours_id
+                WHERE u.id = :id
+                GROUP BY u.id
+                ORDER BY student_count DESC
+            ");
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC); 
+        } catch (PDOException $e) {
+            error_log("Error fetching student count for teacher: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function coursByEnseignant($id) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) AS cours_count 
+                FROM cours 
+                WHERE enseignant_id = :id
+            ");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['cours_count'] ?? 0;
+        } catch (PDOException $e) {
+            error_log("Error counting courses: " . $e->getMessage());
+            return 0;
+        }
+    }
+    
+    
     
     
     
