@@ -486,4 +486,49 @@ class Cours {
             return [];
         }
     }
+
+    public function getPaginatedCourses($limit, $page) {
+        try {
+            $offset = ($page - 1) * $limit;
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    c.*, 
+                    ca.name AS category_name, 
+                    u.username AS enseignant_name, 
+                    GROUP_CONCAT(t.name) AS tags
+                FROM cours c
+                LEFT JOIN categories ca ON c.category_id = ca.id
+                LEFT JOIN users u ON c.enseignant_id = u.id
+                LEFT JOIN cours_tags ct ON c.id = ct.cours_id
+                LEFT JOIN tags t ON ct.tag_id = t.id
+                GROUP BY c.id
+                LIMIT :limit OFFSET :offset
+            ");
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        
+            $stmt->execute();
+            $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $courses ?: [];
+        } catch (PDOException $e) {
+            error_log("Error fetching paginated courses: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    public function getTotalPages($limit = 10) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) FROM cours c
+            ");
+            $stmt->execute();
+            $totalCourses = $stmt->fetchColumn();
+            return ceil($totalCourses / $limit);
+        } catch (PDOException $e) {
+            error_log("Error counting courses: " . $e->getMessage());
+            return 0;
+        }
+    }
+    
 }

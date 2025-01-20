@@ -25,7 +25,12 @@ $user = new Admin($db);
 $isLoggedIn = $user->isLoggedIn();
 $userRole = $_SESSION['user']['role'] ?? ''; 
 
-$courses = $coursObj->affichage();
+// $courses = $coursObj->affichage();
+$limit = 6;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$courses = $coursObj->getPaginatedCourses($limit, $page);
+$totalPages = $coursObj->getTotalPages($limit);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['search'])) {
     $searchQuery = htmlspecialchars(trim($_POST['search'])); 
@@ -180,6 +185,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['search'])) {
             <?php endforeach; ?>
         </div>
     </div>
+    <!-- pagination -->
+    <div class="pagination flex justify-center mt-8 gap-1 mb-2">
+        <?php if ($page > 1): ?>
+            <a href="?page=<?php echo $page - 1; ?>" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">
+                Previous
+            </a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=<?php echo $i; ?>" 
+            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg <?php echo $i == $page ? 'bg-blue-700' : ''; ?>">
+                <?php echo $i; ?>
+            </a>
+        <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="?page=<?php echo $page + 1; ?>" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">
+                Next
+            </a>
+        <?php endif; ?>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-gradient-to-r from-gray-800 via-gray-900 to-black p-6 mt-auto">
       <div class="container mx-auto text-center text-white">
