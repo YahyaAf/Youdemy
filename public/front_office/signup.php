@@ -3,6 +3,12 @@ session_start();
 $form_errors = $_SESSION['form_errors'] ?? [];
 $form_data = $_SESSION['form_data'] ?? [];
 unset($_SESSION['form_errors'], $_SESSION['form_data']);
+
+
+if (isset($_SESSION['user'])) {
+    header('Location: ../index.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
