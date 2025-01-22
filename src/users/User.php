@@ -23,10 +23,7 @@ abstract class User {
     public function login() {
     }
 
-    public function logout() {
-        session_unset();
-        session_destroy();
-    }
+    abstract public function logout();
 
     public function readAll() {
         try {
